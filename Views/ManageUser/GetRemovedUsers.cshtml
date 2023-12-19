@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Poll4u_Web_BOL.User>
+@{
+    ViewBag.Title = "RemovedUsers";
+    ViewBag.PageName = "Users";
+    ViewBag.UserClass = "active";
+    ViewBag.RemoveUserClass = "active";
+    ViewBag.Link = "GetAllUsers";
+    Layout = "~/Views/Shared/Admin_Layout.cshtml";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Total Removed Users @Model.Count()</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="myTable">
+                <thead>
+                    <tr>
+                        <td>User id</td>
+                        <td> First Name </td>
+                        <td> Last Name </td>
+                        <td> Username </td>
+                        <td> E-Mail</td>
+                        <td> Options</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @item.user_id
+                            </td>
+                            <td>
+                                @item.FirstName
+                            </td>
+                            <td>
+                                @item.LastName
+                            </td>
+                            <td>
+                                @item.Username
+                            </td>
+                            <td>
+                                @item.E_Mail
+                            </td>
+                            <td>
+                                @Html.ActionLink("Details", "GetUserDetail", "ManageUser", new { id = item.user_id }, null) |
+                                @Html.ActionLink("Unban", "Unbanuser", "ManageUser", new { id = item.user_id }, new { onclick = "return confirm('You Realy want to Unban this User');" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

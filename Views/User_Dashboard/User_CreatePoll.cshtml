@@ -1,0 +1,166 @@
+﻿
+@{
+    ViewBag.Title = "User_CreatePoll";
+    Layout = "~/Views/Shared/User_Layout.cshtml";
+}
+
+
+<form action="~/User_Dashboard/User_CreatePoll" method="post" onsubmit="return cp_validation()">
+    <div class="container my-1">
+        <h3>Create Poll</h3>
+    </div>
+    <input type="hidden" id="user_id" value='@Session["user_id"]' name="user_id" />
+    <div class="container my-1">
+        <p class="fw-light"><h6>Complete the below fields to create your poll</h6></p>
+    </div>
+    <br>
+    <div class="container my-1">
+        <p class="fw-normal">Poll question</p>
+        <div class="form-floating active">
+            <textarea class="form-control" name="cp_Question" placeholder="ask a question here" id="Question" style="height: 100px;resize:none;" required></textarea>
+            <label for="Question"><p class="fw-lighter">Eg. What is your favourite color?</p></label>
+        </div>
+    </div>
+    <br>
+    <div class="container my-1">
+        <p container class="fw-normal">Poll options</p>
+    </div>
+    <div class="container">
+        <div class="form-floating active">
+            <input type="text" class="form-control" name="option1" placeholder="put a option here." id="option1" required />
+            <label for="option1"><p class="fw-lighter">Eg. Option 1</p></label>
+        </div>
+    </div>
+    <br>
+
+    <div class="container" id="addafter">
+        <div class="form-floating active">
+            <input type="text" class="form-control" name="option2" placeholder="put a option here." id="option2" required />
+            <label for="option2"><p class="fw-lighter">Eg. Option 2</p></label>
+        </div>
+    </div>
+    <br>
+
+
+    <div class="container">
+        <button type="button" class="btn btn-primary" id="Addoption" onclick="Add_Option()">Add Another Option</button>
+    </div>
+    <br>
+    <hr>
+
+    <br>
+    <div style="margin-left:30px;">
+        <div class="row m-2">
+            <div class="col-md-4">
+                <label class="form-label">Poll category</label>
+                <div class="form-floating">
+                    <select class="form-select pt-0 pb-0" name="category_id" id="createpoll_category">
+                        <option selected value="Example"><p class="fw-lighter">Eg. Movie</p></option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+            @*<div class=" col-md-4">
+                <label class="form-label">Poll visiblity</label>
+                <div class="form-floating">
+                    <select class="form-select" id="floatingSelectGrid" name="cp_visibility" style="padding-top:3px;">
+                        <option value="Public">Public</option>
+                        <option value="Private2">Private</option>
+                    </select>
+                </div>
+            </div>*@
+        </div>
+        <br>
+
+        <div class="row m-2">
+            <div class="card col-md-4 ml">
+                <div class="form-check card-body pl-4">
+                    <input class="form-check-input" type="checkbox" name="cp_multipleoption" id="Multipleoption">
+                    <label class="form-check-label" for="Multipleoption">
+                        Allow multiple votes
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="card col-md-4">
+                <div class="form-check card-body pl-4">
+                    <input class="form-check-input" type="checkbox" name="cp_comment" id="addComment">
+                    <label class="form-check-label" for="addComment">
+                        Add Comment
+                    </label>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row m-2">
+            <div class="card col-md-4 ml">
+                <div class="form-check card-body pl-4">
+                    <input class="form-check-input" type="checkbox" value="" name="Set_Enddate" id="EndDate">
+                    <label class="form-check-label" for="EndDate">
+                        Set End date
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="card border-0 bg-transparent col-md-4 ml">
+                <div class="End_date pt-2" style="display: none; height: 59px; margin-left: -25px;">
+                    <input type="date" style="width:100%;height:100%;" class="form-control" id="End_Date" value="null" name="cp_enddate" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+    <div class="container">
+        <input type="submit" class="btn btn-primary" onclick="cp_check()">
+    </div>
+    </div>
+</form>
+<style>
+    .ml{
+        margin-left:10px !important;
+    }
+</style>
+<script>
+    var i = 3;
+    function Add_Option() {
+        if (i == 5) {
+            alert('You can only use 4 Option For More Use Comment Section');
+        }
+        else {
+            $("#addafter").append("<br> <div class ='form-floating active'><input type='text' class='form-control'  name= 'option" + i + "' placeholder='put a option here.' id='floatingTextarea' required /><label for='floatingTextarea'><p class='fw-lighter'>Eg. Option " + i + " </p></label></div >");
+            i = i + 1;
+
+        }
+    }
+    $(function () {
+        $('#EndDate').click(function () {
+            if ($(this).is(':checked'))
+                $(".End_date").show();
+            else
+                $(".End_date").hide();
+        });
+    });
+
+    
+
+    function cp_validation() {
+        var category = document.getElementById("createpoll_category").value;
+        
+        if (category == "Example") {
+            document.getElementById("cmttoast").innerHTML = "Please Select Category";
+            $('.toast').toast({ delay: 1000 });
+            $(".toast").toast('show');
+            return false
+        }
+        else {
+            return true;
+        }
+        
+    }
+
+    $('input[type="checkbox"]').on('change', function () {
+        this.value = this.checked ? 1 : 0;
+        //alert(this.value);
+    }).change();
+</script>

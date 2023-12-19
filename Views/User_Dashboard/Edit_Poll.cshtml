@@ -1,0 +1,170 @@
+﻿
+@{
+    ViewBag.Title = "Edit_Poll";
+    Layout = "~/Views/Shared/User_Layout.cshtml";
+}
+@foreach (var item in Model.poll)
+{
+    
+<form action="~/User_Dashboard/Edit_Poll" method="post" onsubmit="return cp_validation()">
+    <div class="container my-1">
+        <h3>Edit Poll</h3>
+    </div>
+    <input type="hidden" id="user_id" name="user_id" value="@item.user_id"/>
+    <input type="hidden" id="poll_id" name="poll_id" value="@item.poll_id" />
+    <div class="container my-1">
+        <p class="fw-light"><h6>Complete the below fields to Edit your poll</h6></p>
+    </div>
+    <br>
+    <div class="container my-1">
+        <p class="fw-normal">Poll question</p>
+        <div class="form-floating active">
+            <textarea class="form-control" name="cp_Question" placeholder="ask a question here" id="Question" style="height: 100px;resize:none;" required>@item.cp_Question</textarea>
+            @*<label for="Question"><p class="fw-lighter">Eg. What is your favourite color?</p></label>*@
+        </div>
+    </div>
+    <br>
+    <div class="container my-1">
+        <p container class="fw-normal">Poll options</p>
+    </div>
+    <div class="container">
+        <div class="form-floating active">
+            <input type="text" value="@item.option1" class="form-control" name="option1" placeholder="put a option here." id="option1" required />
+            @*<label for="option1"><p class="fw-lighter">Eg. Option 1</p></label>*@
+        </div>
+    </div>
+    <br>
+
+    <div class="container" id="addafter">
+        <div class="form-floating active">
+            <input type="text" value="@item.option2" class="form-control" name="option2" placeholder="put a option here." id="option2" required />
+            @*<label for="option2"><p class="fw-lighter">Eg. Option 2</p></label>*@
+        </div>
+    </div>
+    <br>
+
+    <div class="container" id="addafter">
+        <div class="form-floating active">
+            <input type="text" @if (item.option3 != "") {<text> value = "@item.option3"</text> }  class="form-control" name="option3" placeholder="put a option here." id="option3" />
+            @if (item.option3 == "")
+            {<text><label for="option3"><p class="fw-lighter">Eg. Option 3</p></label></text>}
+        </div>
+    </div>
+    <br>
+
+    <div class="container" id="addafter">
+        <div class="form-floating active">
+            <input type="text" @if (item.option4 != "") { <text> value="@item.option4" </text> } class="form-control" name="option4" placeholder="put a option here." id="option4"  />
+            @if (item.option4 == "")
+            {<text><label for="option4"><p class="fw-lighter">Eg. Option 4</p></label></text>}
+        </div>
+    </div>
+    <br>
+
+
+    <br>
+    <hr>
+
+    <br>
+    <div style="margin-left:30px;">
+        <div class="row m-2">
+            <div class="col-md-4">
+                <label class="form-label">Poll category</label>
+                <div class="form-floating">
+                    <select class="form-select pt-0 pb-0" name="category_id" id="Editpoll_category">
+                        @foreach (var item2 in Model.category)
+                        {
+                            if (item2.Name == item.category)
+                            {
+                                <option selected value="@item2.category_id" id="@item2.category_id"><p class="fw-lighter">@item2.Name</p></option>
+                            }
+                            else
+                            {
+                                <option value="@item2.category_id" id="@item2.category_id"><p class="fw-lighter">@item2.Name</p></option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+            @*<div class=" col-md-4">
+                <label class="form-label">Poll visiblity</label>
+                <div class="form-floating">
+                    <select class="form-select" id="floatingSelectGrid" name="cp_visibility" style="padding-top:3px;">
+                        <option value="Public" @if (item.cp_visibility == "Public") {<text>selected</text>}>Public</option>
+                        <option value="Private" @if (item.cp_visibility == "Private") {<text>selected</text>} >Private</option>
+                    </select>
+                </div>
+            </div>*@
+        </div>
+        <br>
+
+        <div class="row m-2">
+            <div class="card col-md-4 ml">
+                <div class="form-check card-body pl-4">
+                    <input class="form-check-input" type="checkbox" name="cp_multipleoption" id="Multipleoption" @if(item.cp_multipleoption==1){ <text>checked</text> }>
+                    <label class="form-check-label" for="Multipleoption">
+                        Allow multiple votes
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="card col-md-4">
+                <div class="form-check card-body pl-4">
+                    <input class="form-check-input" type="checkbox" name="cp_comment" id="addComment"  @if(item.cp_comment==1){ <text>checked</text> }>
+                    <label class="form-check-label" for="addComment">
+                        Add Comment
+                    </label>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row m-2">
+            <div class="card col-md-4 ml">
+                <div class="form-check card-body pl-4">
+                    @*<input class="form-check-input" type="checkbox" value="" name="Set_Enddate" id="EndDate">*@
+                    <label class="form-check-label" for="EndDate">
+                        Set End date
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="card border-0 bg-transparent col-md-4 ml">
+                <div class="End_date pt-2" style="height: 59px; margin-left: -25px;">
+                    
+                    <input type="date" style="width:100%;height:100%;" class="form-control" id="End_Date"
+                    @if(item.cp_enddate!="")
+                    {
+                        var date = Convert.ToDateTime(item.cp_enddate);
+                        <text> value=@date.ToString("yyyy-MM-dd")</text>
+                    } name="cp_enddate" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+    <div class="container">
+        <input type="submit" value="Update" class="btn btn-primary" onclick="cp_check()">
+    </div>
+
+</form>
+}
+
+<style>
+
+    .ml {
+        margin-left: 10px !important;
+    }
+     .form-control{
+        padding-top:10px !important;
+    }
+</style>
+<script>
+    //Checkbox 
+    $('input[type="checkbox"]').on('change', function () {
+        this.value = this.checked ? 1 : 0;
+        //alert(this.value);
+    }).change();
+</script>
+

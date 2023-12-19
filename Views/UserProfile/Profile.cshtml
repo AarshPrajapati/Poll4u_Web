@@ -1,0 +1,293 @@
+﻿
+@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Views/Shared/User_Layout.cshtml";
+}
+
+<div id="Userpoll">
+    @foreach (var item in Model.User)
+    {
+        <section id="Profile_Page">
+            <div class="profile mt-3">
+                <div class="container">
+                    <div class="profilcard">
+                        <div class="iq-card iq-card-block iq-card-stretch iq-card-height">
+                            <div class="iq-card-body profile-page p-0">
+                                <div class="profile-header">
+                                    <div class="cover-container">
+                                        <input type="hidden" id="u_id" value="@item.user_id" />
+                                        <input type="hidden" id="Total_follower" value="@item.Total_followers" />
+                                        <img src="~/Content/Profile Photo/Blank_Image.jpg" alt="profile-bg" class="rounded img-fluid w-100">
+                                        <ul class="header-nav d-flex flex-wrap justify-end p-0 m-0">
+                                        </ul>
+                                    </div>
+                                    <div class="profile-info p-4">
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-12">
+                                                <div class="user-detail pl-5">
+                                                    <div class="d-flex flex-wrap align-items-center">
+                                                        <div class="profile-img px-4">
+
+                                                            <img src="@item.profile" alt="profile-img" class="avatar-130 img-fluid">
+                                                        </div>
+                                                        <div class="profile-detail ">
+                                                            <h3>@item.Username</h3><small>@item.FirstName  @item.LastName</small>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    
+                                                    <div class="float-end follow_button">
+                                                        <strong id="show_Followers">@item.Total_followers  Follower</strong><br />
+                                                            <button id="follow_unfollow" class="followbtn btn btn-primary" onclick="follow('@item.user_id',@item.Total_followers)">Follow</button>
+                                                        </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    }
+
+    @foreach (var item2 in Model.Poll)
+    {
+        var vote = "Vote" + item2.poll_id;
+        var view = "View" + item2.poll_id;
+        var TotalCMT = "totalcmt" + item2.poll_id;
+        var TotalLike = "totallike" + item2.poll_id;
+        var BTNTotalLike = "btntotallike" + item2.poll_id;
+        var option1 = "option1" + item2.poll_id;
+        var option2 = "option2" + item2.poll_id;
+        var option3 = "option3" + item2.poll_id;
+        var option4 = "option4" + item2.poll_id;
+        <br />
+        <section>
+            <div class="container" style="width:95%;">
+                <div class="card" style="color:darkslategray;">
+                    <div class="badge vote">@item2.Total  votes</div>
+
+                    <div class="card-body" onclick="Get_View_id('@item2.poll_id')" style="padding-bottom:0px;">
+                        <span class="badge  bg-primary" style="position:absolute;right:1%;margin-top:10px;">@item2.category</span>
+                        <h5 class="card-title">@item2.cp_Question</h5>
+                        <input type="hidden" value="@item2.poll_id" id="pollid" />
+                        @*<small>Total Vote:- @item.Total</small><br />*@
+                        @if (item2.Total == 0)
+                        {
+                            item2.Total = 1;
+                        }
+                        <small style="color:gray;">Created on @item2.cp_polldate.ToString("d")</small><br />
+                        @*@{ if (item.cp_enddate != "")
+                                {
+                                    <small style="color:gray;">Expire on @item.cp_enddate</small>
+                                }
+                            }*@
+
+                    </div>
+
+                    <div class="option @item2.poll_id" style="display:none;">
+
+                        <div class="card pt-2 border-0">
+                            <div class="card-header">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="option1" onclick="Checkbox(@item2.poll_id,@item2.cp_multipleoption)" id="@option1" value="@item2.option1">
+                                    <label class="form-check-label" for="exampleRadios1">
+                                        @item2.option1
+                                    </label>
+                                </div>
+                                @*<div class="progress">
+                                        <div class="progress-bar" data-html="true" data-bs-toggle="tooltip" title=" vote: @item.count1 <br/> Average: @(item.count1 * 100 / item.Total)%" role="progressbar" style="width: @(item.count1 * 100 / item.Total)%"></div>
+                                    </div>*@
+                            </div>
+
+                        </div>
+                        <div class="card pt-3 border-0">
+                            <div class="card-header">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="option2" onclick="Checkbox(@item2.poll_id,@item2.cp_multipleoption)" id="@option2" value="@item2.option2">
+                                    <label class="form-check-label" for="exampleRadios2">
+                                        @item2.option2
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        @if (item2.option3 != "")
+                        {
+                            <div class="card pt-3 border-0">
+                                <div class="card-header">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="option3" onclick="Checkbox(@item2.poll_id,@item2.cp_multipleoption)" id="@option3" value="@item2.option3">
+                                        <label class="form-check-label" for="exampleRadios2">
+                                            @item2.option3
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @if (item2.option4 != "")
+                        {
+                            <div class="card pt-3 pb-2 border-0">
+                                <div class="card-header">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="option4" onclick="Checkbox(@item2.poll_id,@item2.cp_multipleoption)" id="@option4" value="@item2.option4">
+                                        <label class="form-check-label" for="exampleRadios2">
+                                            @item2.option4
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <br />
+                    <div class="card-footer p-3 border-0">
+
+
+                        @*<div class="col-md-2"><div class="btn btn-success">@Html.ActionLink("Comment", "AdminPoll", "Poll", new { id = item.Adminpoll_id }, new { @class = "btncomment", onclick = "Show_comment('" + item.Adminpoll_id + "','" + xx + "')" })  <i class='far fa-comment'></i></div></div>*@
+                        @if (item2.cp_comment == 1)
+                        {
+                            <span><button type="button" onclick="Show_comment('@item2.poll_id', '@item2.cp_Question')" value="Comment" class="bt btn btn-light" id="@TotalCMT"><i class="bi bi-chat"></i>  @item2.TotalCMT</button></span>
+                        }
+                        <span><button type="button" onclick="Add_Like('@item2.poll_id')" value="@item2.TotalLIKE" class="bt btn btn-light" id=@BTNTotalLike><i class="bi bi-hand-thumbs-up" id=@TotalLike></i>  @item2.TotalLIKE</button></span>
+                        <span style="position:absolute; right:1%;">
+                            <input type="button" style="display:none;" name="Vote" class="bt btn btn-light border Vote" onclick="Submit_Vote('@item2.poll_id')" id="@vote" value="Vote" />
+                            <input type="button" name="View" class="bt btn btn-light border sh viewresult" id="@view" onclick="Get_View_id('@item2.poll_id')" value="View Option" />
+
+                            <a href="/User_Dashboard/View_result/@item2.poll_id"><input type="button" style="display:none;" class="bt btn border btn-light @item2.poll_id" value="View Result" /></a>
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+            <br />
+        </section>
+    }
+</div>
+<div class="card comment" id="Show_Comment" style="display:none;">
+
+    <div class="header pl-2" style="box-shadow:none;">
+        <p><h3>Comment<button class="close" type="button" id="cmtclose" onclick="Close_cmt()">×</button></h3></p>
+    </div>
+    <div class="card-header">
+        <h5><strong id="cmt"></strong></h5>
+    </div>
+
+    <div class="card-body">
+        <h5>Comments</h5><br />
+        <div id="usercomments" style="overflow:auto;font-size:14px;">
+
+        </div>
+        <input type="hidden" id="poll_id" />
+        <br />
+        <textarea name="comment" style="resize:none;" id="sendComment" class="form-control Comment-textarea" placeholder="Enter Comment Here"></textarea>
+        <button type="button" class="btn btn-light send_comment" onclick="Add_Comment()"><i class="bi bi-send-fill"></i></button>
+    </div>
+    <div class="card-footer">
+
+    </div>
+</div>
+
+
+<script>
+    function follow(id,followers) {
+        var user_id = id;
+        var total_f = followers;
+      //  var user_id_f = document.getElementById("User_id").value;
+        @if (Session["user_id"] == null) {
+           <text> window.location = "/Login/Login";</text>
+        }
+        else {<text>
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: "@(Url.Action("Follow", "UserProfile"))",
+                data: JSON.stringify({ u_id: user_id}),
+                dataType: "json",
+                success: function (data) {
+                    if (data == 1) {
+                        $("#show_Followers").html("");
+                        total_f = total_f + 1;
+                        document.getElementById("cmttoast").innerHTML = "Follow";
+                        $('.toast').toast({ delay: 1000 });
+                        $(".toast").toast('show');
+                        document.getElementById("follow_unfollow").innerHTML = "Unfollow";
+                        document.getElementById("show_Followers").innerHTML =   total_f + "  Follower";
+                        document.getElementById("follow_unfollow").setAttribute("onclick", "Unfollow('" + user_id + "','" + total_f + "')");
+                    }
+                    else {
+                        document.getElementById("cmttoast").innerHTML = "Please Reload the page";
+                        $('.toast').toast({ delay: 1000 });
+                        $(".toast").toast('show');
+                    }
+
+                }
+            })</text>
+        }
+    }
+
+    function Unfollow(id,followers) {
+       var user_id = id;
+        var total_f = followers;
+        //var user_id_f = document.getElementById("User_id").value;
+        @if(Session["user_id"] == null) {
+            <text>window.location = "/Login/Login";</text>
+        }
+        else {<text>
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: "@(Url.Action("Unfollow", "UserProfile"))",
+                data: JSON.stringify({ u_id: user_id }),
+                dataType: "json",
+                success: function (data) {
+                    if (data == 1) {
+                        $("#show_Followers").html("");
+                        total_f = total_f - 1;
+                        document.getElementById("cmttoast").innerHTML = "Unfollow";
+                        $('.toast').toast({ delay: 1000 });
+                        $(".toast").toast('show');
+                        document.getElementById("follow_unfollow").innerHTML = "Follow";
+                        document.getElementById("show_Followers").innerHTML = total_f + "  Follower";
+                        document.getElementById("follow_unfollow").setAttribute("onclick", "follow('" + user_id + "'," + total_f + ")");
+                    }
+                    else {
+                        document.getElementById("cmttoast").innerHTML = "Please Reload the page";
+                        $('.toast').toast({ delay: 1000 });
+                        $(".toast").toast('show');
+                    }
+
+                }
+            })</text>
+        }
+    }
+
+    @*$("#Profile_Page").ready(function () {
+        setTimeout(function () {
+            var user_id = document.getElementById("u_id").value;
+            var user_id_f = document.getElementById("User_id").value;
+
+            var total_f = document.getElementById("Total_follower").value;
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: "@(Url.Action("Get_UserFollow", "UserProfile"))",
+                data: JSON.stringify({ u_id: user_id, u_id_f: user_id_f }),
+                dataType: "json",
+                success: function (data) {
+                    if (data == 1) {
+                        document.getElementById("follow_unfollow").innerHTML = "Unfollow";
+                        document.getElementById("follow_unfollow").setAttribute("onclick", "Unfollow('" + user_id + "','" + total_f + "')");
+                    }
+                }
+            })
+        }, 1000);
+    });*@
+
+
+</script>

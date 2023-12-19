@@ -1,0 +1,166 @@
+﻿@*@model IEnumerable<Poll4u_Web_BOL.User>*@
+@using Poll4u_Web_BOL
+@model dynamic
+@{
+    ViewBag.Title = "GetUserDetail";
+    ViewBag.PageName = "Users";
+    ViewBag.UserClass = "active";
+    ViewBag.Link = "GetAllUsers";
+    Layout = "~/Views/Shared/Admin_Layout.cshtml";
+}
+
+<style>
+    input {
+        font-weight: bolder;
+    }
+</style>
+@foreach (var iteam in Model.User)
+{
+<div class="row">
+    <div class="col-md-8 ">
+        <div class="card">
+            <div class="header  m-3 ">
+                <h4 class="title">Profile</h4>
+            </div>
+            <div class="content">
+
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <div class="container-fluid">
+                            <label>User_id</label>
+                            <input type="text" class="form-control" disabled value="@iteam.user_id">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="container-fluid">
+                            <label>Username</label>
+                            <input type="text" class="form-control" disabled value="@iteam.Username">
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="container-fluid">
+                            <label>Email address</label>
+                            <input type="email" class="form-control" disabled value="@iteam.E_Mail">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="container-fluid">
+                            <label>First Name</label>
+                            <input type="text" class="form-control" disabled value="@iteam.FirstName">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="container-fluid">
+                            <label>Last Name</label>
+                            <input type="text" class="form-control" disabled value="@iteam.LastName">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <div class="container-fluid">
+                            <label>Joining Date</label>
+                            <input type="text" class="form-control" disabled value="@iteam.Date">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="container-fluid">
+                            <label>Followers</label>
+                            <input type="text" class="form-control" disabled placeholder="Followers" value="@iteam.Total_followers">
+                        </div>
+                    </div>
+                    @*<div class="col-md-4">
+                        <div class="container-fluid">
+                            <label>Following</label>
+                            <input type="text" class="form-control" disabled placeholder="Following" value="@iteam.following">
+                        </div>
+                    </div>*@
+                    <div class="col-md-6">
+                        <div class="container-fluid">
+                            <label>Status</label>
+                            <input type="text" class="form-control" disabled placeholder="@iteam.status">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-body">
+            <div class="content">
+                <div class="author">
+                    <a href="@iteam.profile">
+                        <img class="avatar border-gray" src="@iteam.profile" alt="..." height="350px" width="100%"/>
+                        <center>
+                            <h4 class="title" style="color:black">
+                                @iteam.FirstName<br />
+                            </h4>
+                            <h6>
+                                <small style="color:gray">@iteam.Username</small>
+                            </h6>
+                        </center>
+                    </a>
+                </div>
+            </div>        
+        </div>
+    </div>
+</div>
+}
+<div class="row mt-3">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="header">
+                <h4 class="title m-3">Polls</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <div class="table">
+                        <table id="myTable">
+                            <thead>
+                                <tr>
+                                    <td> Poll id </td>
+                                    <td> Category id </td>
+                                    <td> Question </td>
+                                    <td> Created Date</td>
+                                    <td>Options</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Poll)
+                                {
+                                    <tr>
+                                        <td>
+                                            @item.poll_id
+                                        </td>
+                                        <td>
+                                            @item.category_id
+                                        </td>
+                                        <td>
+                                            @item.cp_Question
+                                        </td>
+                                        <td>
+                                            @item.cp_polldate
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("Details", "PollDetail", "Poll", new { p_id = item.poll_id, u_id = item.user_id }, null) |
+                                            @Html.ActionLink("Remove", "RemovedPolls", "Poll", new { id = item.poll_id }, new { onclick = "return confirm('You Realy want to remove this Poll');" })
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

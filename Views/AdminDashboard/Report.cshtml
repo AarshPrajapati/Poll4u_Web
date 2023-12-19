@@ -1,0 +1,316 @@
+﻿
+@model dynamic
+    @using Poll4u_Web_BOL
+@{
+    ViewBag.Title = "Report";
+    ViewBag.DashBoardClass = "active";
+    ViewBag.Pagename = "Report";
+    Layout = "~/Views/Shared/Admin_Layout.cshtml";
+}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://code.angularjs.org/1.2.21/angular.js"></script>
+<!--<link rel="stylesheet" href="style.css" />-->
+<script src="https://code.highcharts.com/highcharts.src.js"></script>
+<br />
+
+<h1></h1>
+<div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Total User
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.ChartUser[0].Total</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-user fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Active User
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.ChartUser[0].ActiveUser</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-user fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Active Polls
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.ChartPoll[0].ActivePoll</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-poll fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Total Polls
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.ChartPoll[0].Total</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-poll fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-5">
+        <div class="chart" id="UserChart"></div>
+    </div>
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-5">
+        <div class="chart" id="PollChart"></div>
+    </div>
+</div>
+<br />
+<hr />
+<br />
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Last Week Joind User @Model.User.Count</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <div class="table">
+                        <table id="myTable">
+                            <thead>
+                                <tr>
+                                    <td> FirstName </td>
+                                    <td> Username </td>
+                                    <td> E-Mail</td>
+                                    <td> Options</td>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var item in Model.User)
+                                {
+                                    <tr>
+
+                                        <td>
+                                            @item.FirstName
+                                        </td>
+
+                                        <td>
+                                            @item.Username
+                                        </td>
+                                        <td>
+                                            @item.E_Mail
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("Details", "GetUserDetail", "ManageUser", new { id = item.user_id }, null)|
+
+                                            @Html.ActionLink("Remove", "RemoveUser", "ManageUser", new { id = item.user_id }, new { onclick = "return confirm('You Realy want to remove this User');" })
+                                        </td>
+                                    </tr>
+
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Last Week Created Polls @Model.Poll.Count</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <div class="table">
+                        <table id="myTable">
+                            <thead>
+                                <tr>
+                                    
+                                    <td> Question </td>
+                                    <td> Created Date</td>
+                                    <td>Options</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Poll)
+                                {
+                                    <tr>
+                                       
+                                        <td>
+                                            @item.cp_Question
+                                        </td>
+                                        <td>
+                                            @item.cp_polldate
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("Details", "PollDetail", "Poll", new { p_id = item.poll_id, u_id = item.user_id }, null) |
+                                            @Html.ActionLink("Remove", "RemovedPolls", "Poll", new { id = item.poll_id }, new { onclick = "return confirm('You Realy want to remove this Poll');" })
+                                        </td>
+                                    </tr>
+                                    
+                                }
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+           var chart = new Highcharts.Chart({
+            chart: {
+
+                   renderTo: 'UserChart',
+                    marginBottom: 80
+            },
+               title: {
+                align:'left',
+                 text: 'User Chart'
+            },
+               xAxis: {
+                   categories: [@foreach (var item in Model.ChartUser) {
+                            @Html.Raw("'"+item.Date.ToString("D")+"',");
+                       }
+                   ],
+                    labels: {
+                       rotation: 90
+                    }
+               },
+               series: [{
+                   showInLegend: false,
+                   name: 'Total User',
+                   colorByPoint: true,
+                   data:[@foreach (var item in Model.ChartUser) {
+                            @Html.Raw(item.TotalUser + ",");
+                       }
+                   ]
+               }],
+               responsive: {
+                   rules: [{
+                       condition: {
+                           maxWidth: 500
+                       },
+                       chartOptions: {
+                           legend: {
+                               layout: 'horizontal',
+                               align: 'center',
+                               verticalAlign: 'bottom'
+                           }
+                       }
+                   }]
+               }
+               ,
+               yAxis: {
+                   title: {
+                       text: 'Users'
+                   }
+               },
+               tooltip: {
+                   crosshairs: true,
+                   shared: true
+               },
+               credits: {
+                   enabled: false
+               }
+           });
+</script>
+
+<script>
+           var chart = new Highcharts.Chart({
+            chart: {
+
+                   renderTo: 'PollChart',
+                    marginBottom: 80
+            },
+               title: {
+                align:'left',
+                 text: 'Poll Chart'
+            },
+               xAxis: {
+                   categories: [@foreach (var item in Model.ChartPoll) {
+                            @Html.Raw("'"+item.Date.ToString("D")+"',");
+                       }
+                   ],
+                    labels: {
+                       rotation: 90
+                    }
+               },
+               series: [{
+                   showInLegend: false,
+                   name: 'Total Polls',
+                   colorByPoint: true,
+                   data:[@foreach (var item in Model.ChartPoll) {
+                            @Html.Raw(item.TotalPolls + ",");
+                       }
+                   ]
+               }],
+               responsive: {
+                   rules: [{
+                       condition: {
+                           maxWidth: 500
+                       },
+                       chartOptions: {
+                           legend: {
+                               layout: 'horizontal',
+                               align: 'center',
+                               verticalAlign: 'bottom'
+                           }
+                       }
+                   }]
+               }
+               ,
+               yAxis: {
+                   title: {
+                       text: 'Polls'
+                   }
+               },
+               tooltip: {
+                   crosshairs: true,
+                   shared: true
+               },
+               credits: {
+                   enabled: false
+               }
+           });
+</script>
+
+
+
+

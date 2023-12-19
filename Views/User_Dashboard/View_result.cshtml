@@ -1,0 +1,175 @@
+﻿
+@{
+    ViewBag.Title = "View_result";
+    Layout = "~/Views/Shared/User_Layout.cshtml";
+}
+
+<div id="Userpoll">
+    @foreach (var item in Model)
+    {
+        var TotalCMT = "totalcmt" + item.poll_id;
+        var TotalLike = "totallike" + item.poll_id;
+        var BTNTotalLike = "btntotallike" + item.poll_id;
+        if (item.cp_enddate != "")
+        {
+            DateTime End_Date = Convert.ToDateTime(item.cp_enddate);
+            item.cp_enddate = End_Date.ToString("d");
+        }
+    <section style="font-weight:500">
+
+        <h4 class="container">Total Vote @item.Total</h4>
+        <br />
+        @if (item.Total == 0)
+        {
+            item.Total = 1;
+        }
+        <div class="col-md-12">
+
+            <div class="container class pt-2">
+                <div class="card">
+
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-md-1">
+                                <img src="@item.Profile" class="rounded-circle" height="30px" width="30px" alt="" />
+                            </div>
+                            <b style="width:auto;margin-left:-50px;"><a href="/UserProfile/Profile/@item.user_id"> @item.username</a></b>
+                            @*<b>@Html.ActionLink((string)item.username, "GetUserDetail", "ManageUser", new { id = item.user_id }, null)</b>*@
+                        </div>
+
+                        <small style="color:gray;margin-left:30px;">Creted On @item.cp_polldate.ToString("d")     </small>
+
+                        <br />
+                        <span class="badge bg-primary" style="position:absolute;right:1%;top:15%;">@item.category</span>
+                    </div>
+                    <br />
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <h5 class="card-title" style="font-weight:500">@item.cp_Question</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <br>
+
+        <div class="col-md-12">
+            <div class="container class pt-2">
+                <div class="card col-md-8">
+                    <div class="card-header">
+                        @item.option1
+                    </div>
+                    <br>
+                    <div class="card-body">
+
+                        <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25"
+                             aria-valuemin="0" aria-valuemax="100">
+                            <div data-html="true"  data-html="true" class="progress-bar" data-bs-toggle="tooltip" title=" vote: @item.count1 <br/> Average: @(item.count1*100/item.Total)%" style="width:@(item.count1*100/item.Total)%"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="col-md-12">
+            <div class="container class pt-2">
+                <div class="card col-md-8">
+                    <div class="card-header">
+                        @item.option2
+                    </div>
+                    <br>
+                    <div class="card-body">
+
+                        <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25"
+                             aria-valuemin="0" aria-valuemax="100">
+                            <div data-html="true"  data-html="true" class="progress-bar" data-bs-toggle="tooltip" title=" vote: @item.count2 <br/> Average: @(item.count2*100/item.Total)%" style="width: @(item.count2*100/item.Total)%"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        @if (item.option3 != "")
+        {
+            <div class="col-md-12">
+                <div class="container class pt-2">
+                    <div class="card col-md-8">
+                        <div class="card-header">
+                            @item.option3
+                        </div>
+                        <br>
+                        <div class="card-body">
+
+                            <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25"
+                                 aria-valuemin="0" aria-valuemax="100">
+                                <div data-html="true" class="progress-bar" data-bs-toggle="tooltip" title=" vote: @item.count3 <br/> Average: @(item.count3*100/item.Total)%" style="width:@(item.count3*100/item.Total)%"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+        }
+        @if (item.option4 != "")
+        {
+            <div class="col-md-12">
+                <div class="container class pt-2">
+                    <div class="card col-md-8">
+                        <div class="card-header">
+                            @item.option4
+                        </div>
+                        <br>
+                        <div class="card-body">
+
+                            <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25"
+                                 aria-valuemin="0" aria-valuemax="100">
+                                <div data-html="true" class="progress-bar" data-bs-toggle="tooltip" title=" vote: @item.count4 <br/> Average: @(item.count4*100/item.Total)%" style="width: @(item.count4*100/item.Total)%"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <section>
+            <div class="container class col-md-12">
+                @if (item.cp_comment == 1)
+                {
+                    <span><button type="button" value="Comment" onclick="Show_comment('@item.poll_id', '@item.cp_Question')" class="bt btn btn-light" id="@TotalCMT"><i class="bi bi-chat"></i> @item.TotalCMT</button></span>
+                }
+                    <span><button type="button" onclick="Add_Like('@item.poll_id')" value="@item.TotalLIKE" class="bt btn btn-light" id=@BTNTotalLike><i class="bi bi-hand-thumbs-up" id=@TotalLike></i>  @item.TotalLIKE</button></span>
+                </div>
+        </section>
+    </section>
+    <br />
+    <br />
+    }
+</div>
+<div class="card comment" id="Show_Comment" style="display:none;">
+
+    <div class="header pl-2" style="box-shadow:none;">
+        <p><h3>Comment<button class="close" type="button" id="cmtclose" onclick="Close_cmt()">×</button></h3></p>
+    </div>
+    <div class="card-header">
+        <h5><strong id="cmt"></strong></h5>
+    </div>
+
+    <div class="card-body">
+        <h5>Comments</h5><br />
+        <div id="usercomments" style="overflow:auto;font-size:14px;">
+
+        </div>
+        <input type="hidden" id="poll_id" />
+        <br />
+        <textarea name="comment" style="resize:none;" id="sendComment" class="form-control Comment-textarea" placeholder="Enter Comment Here"></textarea>
+        <button type="button" class="btn btn-light send_comment" onclick="Add_Comment()"><i class="bi bi-send-fill"></i></button>
+    </div>
+    <div class="card-footer">
+
+    </div>
+</div>

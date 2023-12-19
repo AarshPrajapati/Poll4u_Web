@@ -1,0 +1,232 @@
+﻿@model Poll4u_Web_BOL.User_Signup
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Signup</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+    <!--Style Sheet-->
+    <link href="~/Content/Bootstrap Templete/css/sb-admin-2.css" rel="stylesheet" />
+
+</head>
+<body class="bg-gradient-primary">
+    <div class="container">
+        <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="row">
+                    <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+                    <div class="col-lg-7">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-2">Create an Account!</h1>
+                                <small>
+                                    <div class="alert-danger bg-white mb-2">
+                                        @ViewBag.Message
+                                    </div>
+                                </small>
+                            </div>
+     
+                            <hr />
+                            <br />
+                            <form class="user" action="~/Login/Signup" method="post">
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user" name="FirstName"
+                                               placeholder="First Name" onkeydown="return /[a-z]/i.test(event.key)" autocomplete="off" required>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control form-control-user" name="LastName"
+                                               placeholder="Last Name" onkeydown="return /[a-z]/i.test(event.key)" autocomplete="off" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-12" id="email_cls">
+                                        <input type="email" class="form-control form-control-user" name="Email" id="EMail"
+                                               placeholder="Email Address" onkeyup="Check_email()" autocomplete="off" required>
+                                        <a class="emailverify"></a>
+                                    </div>
+                                   <div class="col-sm-6" id="email_otp">
+
+                                   </div>
+                                </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-6 mb-3 mb-sm-0 username">
+                                            <input type="text" class="form-control form-control-user" name="Username"
+                                                   id="Username" placeholder="Username" oninput="Check_Username()" autocomplete="off" required>
+                                            <small id="UsrChceck" for="Username" class="Check_username"></small>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <input type="password" class="form-control form-control-user" name="Password"
+                                                   id="" placeholder="Password" maxlength="10" autocomplete="off" required>
+                                        </div>
+                                    </div>
+                                    <input type="submit" id="subbtn" class="btn btn-primary btn-user btn-block" name="Register" value="Register" disabled />
+                                    @*<hr>
+        <a href="index.html" class="btn btn-google btn-user btn-block">
+            <i class="fab fa-google fa-fw"></i> Register with Google
+        </a>
+        <a href="index.html" class="btn btn-facebook btn-user btn-block">
+            <i class="fab fa-facebook-f fa-fw"></i> Register with Facebook
+        </a>*@
+                                    <br />
+</form>
+
+                            <hr>
+                            <div class="text-center">
+                                <a class="small" href="/Login/ForgetPassword">Forgot Password?</a>
+                            </div>
+                            <div class="text-center">
+                                <small>
+                                    @Html.ActionLink("Already have an account? Login!", "Login", "Login")
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="~/Content/Bootstrap Templete/vendor/jquery/jquery.min.js"></script>
+    <script src="~/Content/Bootstrap Templete/js/sb-admin-2.js"></script>
+
+    <script src="~/Content/Bootstrap Templete/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Content/Bootstrap Templete/vendor/jquery-easing/jquery.easing.min.js"></script>
+</body>
+</html>
+<style>
+    .emailverify {
+        position: absolute;
+        left: 80%;
+        top: 40%;
+    }
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+</style>
+<script>
+    function Check_Username() {
+        $("#UsrChceck").html("Checking");
+        $.post("@Url.Action("Checkusername","Login")",
+            {
+                Username: $("#Username").val()
+            },
+            function (data) {
+                if (data == true) {
+                    $("#UsrChceck").html("<font color='red'>Please Choose <br/> Another Username</font>");
+                    $("#subbtn").prop('disabled', true);
+                }
+                else if ($("#Username").val()==""){
+                    $("#UsrChceck").html("");
+                    $("#subbtn").prop('disabled', false);
+                }
+                else {
+                    $("#UsrChceck").html("You can <br> Signup Now");
+                    $("#subbtn").prop('disabled', false);
+                }
+            }
+        )
+    }
+
+    function Check_email() {
+        var email = document.getElementById("EMail").value;
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+                url: "@(Url.Action("Check_Useremail", "Login"))",
+                data: JSON.stringify({ email: email}),
+                dataType: "json",
+           success: function (data) {
+                     $("#subbtn").prop('disabled', true).attr('title','Please Verify Email');
+                    if (data == 1) {
+                        alert("Email Id Alredy Used Please Choose Another one");
+
+
+                    }
+                    else {
+                        if (email != "") {
+                            $(".emailverify").text("verify").attr('onclick', 'sendmail()');
+                           // $(".emailverify").attr('onclick', 'sendmail()');
+                        }
+                        else {
+                            $(".emailverify").text("");
+                        }
+                       // $("#subbtn").prop('disabled', false);
+                    }
+
+            }
+        })
+    }
+    function sendmail() {
+        var email = document.getElementById("EMail").value;
+        $("#email_cls").removeClass("col-sm-12").addClass("col-sm-6 mb-3 mb-sm-0");
+        $(".emailverify").text("");
+        $("#email_otp").append("<input type='number' max=4 oninput='check_otp()' class='form-control form-control-user' name='OTP' id = 'otp' placeholder = 'Enter otp' required>");
+        alert("Please Check Mail and Enter otp");
+        $("#subbtn").prop('disabled', false);
+        $.ajax({
+               type: "POST",
+               contentType: "application/json; charset=utf-8",
+               url: "@(Url.Action("Send_Mail", "Login"))",
+               data: JSON.stringify({ E_mail: email}),
+               dataType: "json",
+               success: function (data) {
+               if (data == 1) {
+                //alert("Please Check Mail and Enter otp");
+                //document.getElementById("input_otp").innerHTML = "<div class='col-sm-6'><input type='number' max=4 oninput='check_otp()' class='form-control form-control-user' name='OTP' id = 'otp' placeholder = 'Enter otp' required' required></div>";
+                //$("#r_pass").show();
+                //$("#r_pass").prop('disabled', true);
+               }
+               else {
+                //$("#s_mail").show();
+                   alert("Error");
+               }
+
+               }
+         })
+
+    }
+     function check_otp() {
+        var email = document.getElementById("EMail").value;
+        var otp = document.getElementById("otp").value;
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+                url: "@(Url.Action("Check_otp", "Login"))",
+                data: JSON.stringify({ E_mail: email,OTP: otp}),
+                dataType: "json",
+                success: function (data) {
+                    if (data == 1) {
+                        $("#otp").prop('disabled', true);
+                        $("#subbtn").prop('disabled', false)
+                        $("#otp").css('border-color', '');
+                        
+                    }
+                    else {
+                        $("#otp").css('border-color', 'red');
+                        
+                    }
+
+            }
+        })
+    }
+</script>
+

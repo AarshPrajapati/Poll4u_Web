@@ -1,0 +1,946 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="~/Content/CSS/User_Layout.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.6.1.min.js"></script>
+    <title>User</title>
+</head>
+<body onload="User()">
+
+    <!-- ======= Header ======= -->
+    <header id="header" class="header fixed-top d-flex align-items-center">
+
+        <div class="d-flex align-items-center justify-content-between">
+            <a href="/User_Dashboard/Homepage" class="logo d-flex align-items-center">
+                <img src="~/Content/Logo/POll4u-Logo-UserNav.ico" alt="Logo" />
+                <span class="d-none d-lg-block">Poll4u</span>
+            </a>
+        </div><!-- End Logo -->
+
+        <nav class="header-nav ms-auto">
+            <ul class="d-flex">
+
+                <li class="nav-item ">
+                    <a href="/User_Dashboard/User_Createpoll"><input type="button" class="btn btn-primary" id="btnPoll" value="Create Poll" onclick="" /></a>
+                    @*<a class="nav-link nav-icon btn btn-primary" href="#"> 
+                        <span class="Nav-name">Create Poll</span>
+                    </a>*@
+                </li>
+                <li class="nav-item d-block d-lg-none">
+                    <a class="nav-link nav-icon search-bar-toggle " href="#">
+                        <i class="bi bi-search"></i>
+                    </a>
+                </li><!-- End Search Icon-->
+            </ul>
+        </nav>
+        <div class="search-bar">
+            <div class="search-form d-flex align-items-center">
+                @*<select class="form-select" id="floatingSelectGrid" title="Enter Username" name="cp_visibility" oninput="User_Search()">
+                    <option value="Public">Public</option>
+                    <option value="Private2">Private</option>
+                </select>*@
+                <input type="search" list="search_user" name="search_User" id="User_username"  onkeyup="Profile()" oninput="User_Search()" placeholder="Search" title="Enter Username">
+                <button type="submit" title="Search" onclick="Profile()"><i class="bi bi-search"></i></button>
+                <datalist id="search_user">
+                </datalist>
+            </div>
+        </div>
+
+
+        <!-- End Search Bar -->
+        <!-- End Messages Nav -->
+        <nav class="header-nav ms-auto">
+            <ul class="d-flex align-items-center">
+
+                <li class="nav-item dropdown pe-3">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+
+                            <img alt="Profile" src='@Session["Profile"]' id="ProfilePhoto" class="rounded-circle">
+                            <span class="d-none d-md-block dropdown-toggle ps-2">@User.Identity.Name</span>
+                            <input type="hidden" value="@User.Identity.Name" id="User_Username" />
+                        </a><!-- End Profile Iamge Icon -->
+
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                            <li class="dropdown-header">
+                                <h6 id="f_lName">@Session["FirstName"]  @Session["LastName"]</h6>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" href="/UserProfile/User_MyProfile/@Session["user_id"]" id="myprofile">
+                                    <i class="bi bi-person"></i>
+                                    <span>My Profile</span>
+                                </a>
+                            </li>
+                            @*<li>
+                                <hr class="dropdown-divider">
+                            </li>*@
+
+                            @*<li>
+                                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                                    <i class="bi bi-gear"></i>
+                                    <span>Account Settings</span>
+                                </a>
+                            </li>*@
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
+                                    <i class="bi bi-question-circle"></i>
+                                    <span>Need Help?</span>
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" href="/Login/Logout">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    <span>Log Out</span>
+                                </a>
+                            </li>
+
+                        </ul><!-- End Profile Dropdown Items -->
+                    }
+                    else
+                    {
+                        <nav class="header-nav ms-auto">
+                            <ul class="d-flex">
+                                <li class="nav-Home ">
+
+                                    @Html.ActionLink("Signup", "Signup", "Login", new { }, new { @class = "nav-Signup" })
+                                </li>
+                                <li class="nav-Home">
+                                    @Html.ActionLink("Login", "Login", "Login")
+                                </li>
+
+                            </ul>
+                        </nav>
+
+
+                    }
+                </li><!-- End Profile Nav -->
+
+            </ul>
+        </nav><!-- End Icons Navigation -->
+
+    </header><!-- End Header -->
+    <!-- ======= Sidebar ======= -->
+
+    @*<span id="Data">
+        <input type="hidden" id="User_id" value="0" />
+        <input type="hidden" id="Username" />
+        <input type="hidden" id="E_Mail" />
+        <input type="hidden" id="FirstName" />
+        <input type="hidden" id="LastName" />
+    </span>*@
+
+    <main id="main" class="main">
+        @RenderBody()
+        <div class="toast">
+            <div class="tost-body" id="cmttoast">
+
+            </div>
+        </div>
+    </main><!-- End #main -->
+    <!-- ======= Footer ======= -->
+    <footer id="footer" class="footer">
+        <div class="copyright">
+            &copy; Copyright
+            <br />
+            <strong><span>Created by AVM</span></strong>
+        </div>
+    </footer><!-- End Footer -->
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    <script src="~/Content/Admin_JS/User_JSFile.js"></script>
+
+</body>
+</html>
+<script>
+    var upoll ="@ViewBag.PollMessage";
+    if (upoll != "") {
+
+        document.getElementById("cmttoast").innerHTML = "@ViewBag.PollMessage";
+        //$(".toast").toast({ delay: 1000 });
+        //$(".toast").toast('show');
+        //$(".toast").toast('show');
+        $(".toast").show().delay(1000).fadeOut();
+
+    }
+    function delete_poll(id) {
+        let text = "You really want to delete this poll";
+        if (confirm(text) == true) {
+            $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+                url: "@(Url.Action("Delete_Poll", "User_Dashboard"))",
+                data: JSON.stringify({ poll_id:id}),
+                dataType: "json",
+                success: function (data) {
+                    if (data == 1) {
+                        document.getElementById("cmttoast").innerHTML = "Poll Deleted";
+                        $('.toast').toast({ delay: 1000 });
+                        $(".toast").toast('show');
+                    }
+                    else {
+                        document.getElementById("cmttoast").innerHTML = "Please Try Again";
+                        $('.toast').toast({ delay: 1000 });
+                        $(".toast").toast('show');
+                    }
+                    location.reload();
+            }
+        })
+        }
+    }
+
+    function close_poll(id) {
+        let text = "You really want to Close this poll";
+        if (confirm(text) == true) {
+            $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+                url: "@(Url.Action("Close_Poll", "User_Dashboard"))",
+                data: JSON.stringify({ poll_id:id}),
+                dataType: "json",
+                success: function (data) {
+                    if (data == 1) {
+                        document.getElementById("cmttoast").innerHTML = "Poll Closed";
+                        $('.toast').toast({ delay: 1000 });
+                        $(".toast").toast('show');
+                    }
+                    else {
+                        document.getElementById("cmttoast").innerHTML = "Please Try Again";
+                        $('.toast').toast({ delay: 1000 });
+                        $(".toast").toast('show');
+                    }
+                    location.reload();
+            }
+        })
+        }
+    }
+
+
+    function User_Search() {
+        var username = $("#User_username").val();
+         $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: "@(Url.Action("Search_User", "Login"))",
+            data: JSON.stringify({ username: username }),
+            dataType: "json",
+             success: function (data) {
+                 $("#search_user").empty();
+                 $.each(data, function (index, item) {
+                     if (username == "") {
+                         $("#search_user").empty();
+                     }
+
+                     else {
+
+                         var user = "<option id='P_User' name=" + item.user_id + " style=width:10px;height:10px;>" + item.Username + "<img src=Content/Profile Photo/Aarsh@802.jpg></img></option>";
+                         /* alert(user);*/
+                         $("#p_user").html();
+                         $("#search_user").append(user);
+                     }
+                });
+            },
+        })
+    }
+
+    function Profile() {
+        var name = $("#P_User").val();
+        var inputname = $("#User_username").val();
+        //alert(name +"=="+ inputname);
+        if (name == inputname) {
+            var y = $("#P_User").attr("name");
+             @if(Session["user_id"] != null)
+             { <text>
+                   if (y == @Session["user_id"]) {
+                      window.location = "/UserProfile/User_MyProfile/" + y;
+                    }
+                    else {
+                    window.location = "/UserProfile/Profile/" + y;
+                    }</text>
+             }
+            else
+            {
+              <text> window.location = "/UserProfile/Profile/" + y;</text>
+            }
+        }
+    }
+
+    function view_Profile(id) {
+        var y = id;
+        @if(Session["user_id"] != null)
+        { <text>
+                if (y == @Session["user_id"]) {
+                      window.location = "/UserProfile/User_MyProfile/" + y;
+                }
+                else {
+                 window.location = "/UserProfile/Profile/" + y;
+                 }</text>
+        }
+        else
+        {
+           <text> window.location = "/UserProfile/Profile/" + y;</text>
+        }
+    }
+    function User() {
+        /*  var username = document.getElementById("User_Username").val();*/
+        @*$.post('@Url.Action("GetData", "Login")',
+            {
+                Username: $("#User_Username").val()
+            },
+            function (data) {
+                $("#Data").html("<font color='red'>Please Choose <br/> Another Username</font>");
+            }
+        )*@
+       // var pathname = window.location.pathname;
+       //alert(pathname);
+        var username = $("#User_Username").val();
+        @if(Session["user_id"]!=null)
+            {
+                <text>
+                    var profile_user_id = $("#u_id").val();
+                    if (profile_user_id != undefined) {
+                        Get_UserFollow(@Session["user_id"]);
+                    }
+                    Like(@Session["user_id"]);
+                </text>
+            }
+        @*$.ajax({
+        type: "POST",
+            contentType: "application/json; charset=utf-8",
+                url: "@(Url.Action("GetData", "Login"))",
+                data: JSON.stringify({ username: username }),
+                dataType: "json",
+            success: function (data) {
+                    $.each(data, function (index, item) {
+                    /*document.getElementById("User_id").value = item.user_id;*/
+                    var user_id = item.user_id;
+                    //document.getElementById("Username").value = username;
+                    //document.getElementById("E_Mail").value = item.E_Mail;
+                    //document.getElementById("FirstName").value = item.FirstName;
+                    //document.getElementById("LastName").value = item.LastName;
+                    var profile_user_id = $("#u_id").val();
+                    if (profile_user_id != undefined) {
+                        Get_UserFollow(user_id);
+                    }
+                    Like(user_id);
+                });
+            },
+        })*@
+
+        $.ajax({
+        type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: "@(Url.Action("Get_Category", "User_Dashboard"))",
+
+            dataType: "json",
+            success: function (data) {
+                $.each(data, function (index, item) {
+                    var category = "<li><a class='dropdown-item' href='/User_Dashboard/Homepage?id=" + item.category_id + "&Name=Category'  id='" + item.category_id + "'>" + item.Name + "</a></li >";
+                    var cp_category = "<option value='" + item.category_id + "' id='" + item.category_id + "'>" + item.Name + "</option>";
+                    $("#Category").append(category);
+                    $("#createpoll_category").append(cp_category);
+                });
+            },
+        })
+    }
+
+    function Get_UserFollow(User_id) {
+        var user_id_f = User_id;
+        var user_id = document.getElementById("u_id").value;
+        var total_f = document.getElementById("Total_follower").value;
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: "@(Url.Action("Get_UserFollow", "UserProfile"))",
+                data: JSON.stringify({ u_id: user_id, u_id_f: user_id_f }),
+                dataType: "json",
+                success: function (data) {
+                    if (data == 1) {
+                        document.getElementById("follow_unfollow").innerHTML = "Unfollow";
+                        document.getElementById("follow_unfollow").setAttribute("onclick", "Unfollow('" + user_id + "','" + total_f + "')");
+                    }
+                }
+            })
+    }
+    function Like(user_id) {
+        var ID = user_id;
+         $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: "@(Url.Action("Get_UserLike", "User_Dashboard"))",
+                data: JSON.stringify({ id: ID }),
+                dataType: "json",
+             success: function (data) {
+                 $.each(data, function (index, item) {
+                       // alert(item.poll_id);
+                     var poll_id = "totallike" + item.poll_id;
+                     var btnlike = "btntotallike" + item.poll_id;
+                     $("#" + poll_id).attr('class', 'bi bi-hand-thumbs-up-fill');
+                     $("#" + btnlike).attr('onclick', "rm_Like('" + item.Like_id + "','" + item.poll_id + "')");
+                        // document.getElementById(poll_id).className = "bi bi-hand-thumbs-up-fill";
+                        //document.getElementById(btnlike).setAttribute("onclick", "rm_Like('" + item.Like_id + "','" + item.poll_id +"')");
+                    });
+            },
+        })
+    }
+
+    //Homepage
+       //$(window).scroll(function () {
+    //        $(".option").hide();
+    //    });
+
+    function Get_View_id(id) {
+        var x = id;
+        var y = "Vote" + id;
+        var z = "View" + id;
+        //Pervious Poll
+        $(".border").hide(); //Vote and View Option btn Hide
+        $(".sh").show(); //View Option btn Show
+        $(".option").hide(); //Hide options
+        $('input[type="checkbox"]').prop('checked', false);
+        //CLicked Poll
+        $("div." + x).fadeIn(); //View CLicked Poll Options
+        $("input#" + z).hide(); //Hide View Option Button
+        $("input." + x).show(); //Show View resut btn
+        $("#" + y).show(); //Show Vote btn
+
+    }
+    //function Get_Hide_id(id) {
+    //    var x = id;
+    //    var y = "Vote" + id;
+    //    var z = "View" + id;
+    //    $("div." + x).fadeOut();
+    //    $("input." + x).hide();
+    //    $("input#" + z).show();
+    //    $("#" + y).hide();
+    //}
+
+    function Show_comment(id,comment) {
+        var ID = id;
+        var Comment = comment;
+        var TotalCMt = "totalcmt" + id;
+
+        document.getElementById("poll_id").value = ID;
+        $("#Show_Comment").show();
+        $(':button.bt').prop('disabled', true);
+        document.getElementById("cmt").innerHTML = "Question :- " + Comment;
+        document.getElementById("Userpoll").style.opacity = 0.5;
+        $("#usercomments").html("<div class='spinner-border text-primary' role='status' style='left:50%;position:absolute;'></div ><br><br>");
+
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: "@(Url.Action("Get_Comment", "User_Dashboard"))",
+            data: JSON.stringify({ id: ID }),
+                dataType: "json",
+            success: function (data) {
+                $("#usercomments").html("");
+                document.getElementById(TotalCMt).innerHTML = "<i class='bi bi-chat'></i>  " + data.length;
+                var del = "";
+                //alert(del);
+                $.each(data, function (index, item) {
+                    @if(Session["user_id"]!=null)
+                    { <text>
+                        if (@Session["user_id"] == item.Poll_User_id) {
+                            del = "<a class='delcmt' onclick=del_comment(" + item.Comment_id + ")>Delete</a>";
+                            var comment = "<img class='rounded-circle' src='" + item.Profile + "'width='20px' />   <b><a onclick=view_Profile('" + item.user_id + "') class='pp'>" + item.username + "</a></b>    " + item.comment + del + "<br><hr>";
+                        }
+                        else {
+                            if (@Session["user_id"] == item.user_id) {
+                                del = "<a class='delcmt' onclick=del_comment(" + item.Comment_id + ")>Delete</a>";
+
+                            }
+                            if (del == "") {
+                                var comment = "<img class='rounded-circle' src='" + item.Profile + "'width='20px' />   <b><a onclick=view_Profile('" + item.user_id + "') class='pp'>" + item.username + "</a></b>    " + item.comment + "<br><hr>";
+                            }
+                            else {
+                                var comment = "<img class='rounded-circle' src='" + item.Profile + "'width='20px' />   <b><a onclick=view_Profile('" + item.user_id + "') class='pp'>" + item.username + "</a></b>    " + item.comment + del + "<br><hr>";
+                        }
+                    }</text>
+                    }
+                    else
+                     {
+                        <text>var comment = "<img class='rounded-circle' src='" + item.Profile + "'width='20px' />   <b><a onclick=view_Profile('" + item.user_id + "') class='pp'>" + item.username + "</a></b>    " + item.comment + "<br><hr>";</text>
+                     }
+                  $("#usercomments").append(comment);
+             });
+                if (data.length==0) {
+                    $("#usercomments").append("<b>No Comments Yet!</b>");
+                }
+            },
+        })
+    }
+
+    function Show_Admincomment(id, comment) {
+        var ID = id;
+        var Comment = comment;
+        var TotalCMt = "totalcmt" + id;
+
+        document.getElementById("poll_id").value = ID;
+        $("#Show_Comment").show();
+        $(':button.bt').prop('disabled', true);
+        document.getElementById("cmt").innerHTML = "Question :- " + Comment;
+        document.getElementById("Userpoll").style.opacity = 0.5;
+        $("#usercomments").html("<div class='spinner-border text-primary' role='status' style='left:50%;position:absolute;'></div ><br><br>");
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: "@(Url.Action("Get_AdminComment", "User_Dashboard"))",
+            data: JSON.stringify({ id: ID }),
+                dataType: "json",
+            success: function (data) {
+                $("#usercomments").html("");
+                document.getElementById(TotalCMt).innerHTML = "<i class='bi bi-chat'></i>  " + data.length;
+                var del = "";
+                //alert(del);
+                $.each(data, function (index, item) {
+                    @if(Session["user_id"]!=null)
+                    { <text>
+
+                    if (@Session["user_id"] == item.user_id) {
+                        del = "<a class='delcmt' onclick=del_Admincomment(" + item.Admincomment_id + ")>Delete</a>";
+                    }
+                    else {
+                        del = "";
+                    }
+                            if (del == "") {
+                                var comment = "<img class='rounded-circle' src='" + item.Profile + "'width='20px' />   <b><a onclick=view_Profile('" + item.user_id + "') class='pp'>" + item.username + "</a></b>    " + item.comment + "<br><hr>";
+                            }
+                            else {
+                                var comment = "<img class='rounded-circle' src='" + item.Profile + "'width='20px' />   <b><a onclick=view_Profile('" + item.user_id + "') class='pp'>" + item.username + "</a></b>    " + item.comment + del + "<br><hr>";
+
+                    }</text>
+                    }
+                    else
+                     {
+                        <text>var comment = "<img class='rounded-circle' src='" + item.Profile + "'width='20px' />   <b><a onclick=view_Profile('" + item.user_id + "') class='pp'>" + item.username + "</a></b>    " + item.comment + "<br><hr>";</text>
+                     }
+                  $("#usercomments").append(comment);
+             });
+                if (data.length==0) {
+                    $("#usercomments").append("<b>No Comments Yet!</b>");
+                }
+            },
+        })
+    }
+
+    function del_comment(id) {
+
+        var ID = id;
+
+        var Poll_id = document.getElementById("poll_id").value;
+        var question = document.getElementById("cmt").value;
+        let text = "You really want to delete this Comment";
+        if (confirm(text) == true) {
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: "@(Url.Action("Del_Comment", "User_Dashboard"))",
+                data: JSON.stringify({ id: ID }),
+                dataType: "json",
+                success: function (data) {
+                    if (data == 1) {
+                        document.getElementById("cmttoast").innerHTML = "Comment Deleted Succefully";
+                        $('.toast').toast({ delay: 1000 });
+                        $(".toast").toast('show');
+                    }
+                    else {
+                        document.getElementById("cmttoast").innerHTML = "Please Try Again";
+                        $('.toast').toast({ delay: 1000 });
+                        $(".toast").toast('show');
+                    }
+                    Show_comment(Poll_id, question);
+                },
+            })
+        }
+    }
+
+    function del_Admincomment(id) {
+        var ID = id;
+
+        var Poll_id = document.getElementById("poll_id").value;
+        var question = document.getElementById("cmt").value;
+        let text = "You really want to delete this Comment";
+        if (confirm(text) == true) {
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: "@(Url.Action("Del_AdminComment", "User_Dashboard"))",
+                data: JSON.stringify({ id: ID }),
+                dataType: "json",
+                success: function (data) {
+                    if (data == 1) {
+                        document.getElementById("cmttoast").innerHTML = "Comment Deleted Succefully";
+                        $('.toast').toast({ delay: 1000 });
+                        $(".toast").toast('show');
+                    }
+                    else {
+                        document.getElementById("cmttoast").innerHTML = "Please Try Again";
+                        $('.toast').toast({ delay: 1000 });
+                        $(".toast").toast('show');
+                    }
+                    Show_Admincomment(Poll_id, question);
+                },
+            })
+        }
+    }
+    function Close_cmt() {
+
+        $("#Show_Comment").hide();
+        document.getElementById("Userpoll").style.opacity = 1;
+        $(':button.btn').prop('disabled', false);
+        $("#usercomments").html("");
+    }
+
+    function Add_Comment() {
+        //var User_id = document.getElementById("User_id").value;
+        var Poll_id = document.getElementById("poll_id").value;
+        var comment = document.getElementById("sendComment").value;
+        var question = document.getElementById("cmt").value;
+        if (comment == "") {
+            document.getElementById("cmttoast").innerHTML = "Please Enter Comment";
+            $('.toast').toast({ delay: 1000 });
+            $(".toast").toast('show');
+        }
+        else {
+            @if (Session["user_id"] == null)
+            {
+              <text>window.location = "/Login/Login";</text>
+            }
+            else {
+            <text>
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: "@(Url.Action("Send_Comment", "User_Dashboard"))",
+                data: JSON.stringify({ poll_id: Poll_id, cmt: comment }),
+                dataType: "json",
+                success: function (data) {
+                    if (data == 1) {
+                        document.getElementById("sendComment").value = "";
+                        document.getElementById("cmttoast").innerHTML = "Comment Posted Succefully";
+                        $('.toast').toast({ delay: 1000 });
+                        $(".toast").toast('show');
+                    }
+                    else {
+                        document.getElementById("cmttoast").innerHTML = "Please Try Again";
+                        $('.toast').toast({ delay: 1000 });
+                        $(".toast").toast('show');
+                    }
+                    Show_comment(Poll_id, question);
+                }
+            })
+             </text>
+        }
+
+        }
+    }
+
+    function Add_AdminComment() {
+        var Poll_id = document.getElementById("poll_id").value;
+        var comment = document.getElementById("sendComment").value;
+        var question = document.getElementById("cmt").value;
+        if (comment == "") {
+            document.getElementById("cmttoast").innerHTML = "Please Enter Comment";
+            $('.toast').toast({ delay: 1000 });
+            $(".toast").toast('show');
+        }
+        else {
+            @if (Session["user_id"] == null)
+            {
+              <text>window.location = "/Login/Login";</text>
+            }
+            else {
+            <text>
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: "@(Url.Action("Send_AdminComment", "User_Dashboard"))",
+                data: JSON.stringify({ poll_id: Poll_id, cmt: comment }),
+                dataType: "json",
+                success: function (data) {
+                    if (data == 1) {
+                        document.getElementById("sendComment").value = "";
+                        document.getElementById("cmttoast").innerHTML = "Comment Posted Succefully";
+                        $('.toast').toast({ delay: 1000 });
+                        $(".toast").toast('show');
+                    }
+                    else {
+                        document.getElementById("cmttoast").innerHTML = "Please Try Again";
+                        $('.toast').toast({ delay: 1000 });
+                        $(".toast").toast('show');
+                    }
+                    Show_Admincomment(Poll_id, question);
+                }
+            })
+             </text>
+        }
+
+        }
+    }
+
+    function Add_Like(id) {
+
+        var Poll_id = id;
+        @if (Session["user_id"] == null) {
+          <text>  window.location = "/Login/Login"; </text>
+        }
+        else {
+            <text>
+             $.ajax({
+             type: "POST",
+             contentType: "application/json; charset=utf-8",
+                url: "@(Url.Action("Add_Like", "User_Dashboard"))",
+                data: JSON.stringify({ poll_id:Poll_id}),
+                dataType: "json",
+                success: function (data) {
+                    if (data == 1) {
+                        document.getElementById("cmttoast").innerHTML = "Liked";
+                        $('.toast').toast({ delay: 1000 });
+                        $(".toast").toast('show');
+                    }
+                    else {
+                        document.getElementById("cmttoast").innerHTML = "Please Try Again";
+                        $('.toast').toast({ delay: 1000 });
+                        $(".toast").toast('show');
+                    }
+                    update_Like(Poll_id);
+             }
+             })
+        </text>
+        }
+    }
+
+    function Add_AdminLike(id) {
+        var Poll_id = id;
+        @if (Session["user_id"] == null) {
+          <text>  window.location = "/Login/Login"; </text>
+        }
+        else {
+            <text>
+             $.ajax({
+             type: "POST",
+             contentType: "application/json; charset=utf-8",
+                url: "@(Url.Action("Add_AdminLike", "User_Dashboard"))",
+                 data: JSON.stringify({ Adminpoll_id:Poll_id}),
+                dataType: "json",
+                success: function (data) {
+                    if (data == 1) {
+                        document.getElementById("cmttoast").innerHTML = "Liked";
+                        $('.toast').toast({ delay: 1000 });
+                        $(".toast").toast('show');
+                    }
+                    else {
+                        document.getElementById("cmttoast").innerHTML = "Please Try Again";
+                        $('.toast').toast({ delay: 1000 });
+                        $(".toast").toast('show');
+                    }
+                    //update_Like(Poll_id);
+             }
+             })
+        </text>
+        }
+    }
+
+    function rm_Like(l_id,p_id) {
+
+        var Poll_id = p_id;
+        var Like_id = l_id;
+        @if (Session["user_id"] == null) {
+            <text>window.location = "/Login/Login";</text>
+        }
+        else {<text>
+             $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+                url: "@(Url.Action("RM_Like", "User_Dashboard"))",
+                data: JSON.stringify({ like_id: Like_id}),
+                dataType: "json",
+                success: function (data) {
+                    if (data == 1) {
+                        document.getElementById("cmttoast").innerHTML = "Unlike";
+                        $('.toast').toast({ delay: 1000 });
+                        $(".toast").toast('show');
+                    }
+                    else {
+                        document.getElementById("cmttoast").innerHTML = "Please Try Again";
+                        $('.toast').toast({ delay: 1000 });
+                        $(".toast").toast('show');
+                    }
+                    update_Like(Poll_id);
+            }
+        })</text>
+        }
+    }
+
+    function update_Like(Poll_id) {
+
+        var Poll_ID = Poll_id;
+        var L_btn = "btntotallike" + Poll_ID;
+         //var User_ID = document.getElementById("User_id").value;
+        @if (Session["user_id"] != null)
+            { <text>
+         $.ajax({
+                type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: "@(Url.Action("update_Like", "User_Dashboard"))",
+             data: JSON.stringify({ poll_id: Poll_ID }),
+                dataType: "json",
+             success: function(data) {
+                 $("#" + L_btn).html(" ");
+                        var length = data.length;
+                        if (length == 0) {
+                            document.getElementById(L_btn).innerHTML = "<i class='bi bi-hand-thumbs-up'></i>  " + length;
+                            document.getElementById(L_btn).setAttribute("onclick", "Add_Like('" + Poll_ID + "')");
+                        }
+                        else {
+                            User_ID = @Session["user_id"];
+                            $.each(data, function(index, item) {
+                                var Poll_id = "totallike" + item.poll_id;
+                                var btnlike = "btntotallike" + item.poll_id;
+
+
+                                if (item.user_id == User_ID) {
+                                    document.getElementById(btnlike).innerHTML = "<i class='bi bi-hand-thumbs-up-fill'></i>  " + length;
+                                    document.getElementById(btnlike).setAttribute("onclick", "rm_Like('" + item.Like_id + "','" + item.poll_id + "')");
+                                }
+                                else {
+                                    document.getElementById(btnlike).innerHTML = "<i class='bi bi-hand-thumbs-up'></i>  " + length;
+                                    document.getElementById(btnlike).setAttribute("onclick", "Add_Like('" + item.poll_id + "')");
+                                }
+                            });
+                        }
+                    },
+        })</text>
+        }
+        }
+
+    function Checkbox(id, x) {
+        var ID = id;
+        if (x == 0) {
+            $('input[type="checkbox"].' + ID).on('change', function () {
+                $('input[type="checkbox"].' + ID).not(this).prop('checked', false);
+            });
+        }
+    }
+
+     function Submit_Vote(id) {
+        //var User_id = document.getElementById("User_id").value;
+        @if (Session["user_id"] == null) {
+           <text> window.location = "/Login/Login";</text>
+        }
+        else {
+            <text>
+            var Poll_id = id;
+            var option1 = "option1" + id;
+            var option2 = "option2" + id;
+            var option3 = "option3" + id;
+            var option4 = "option4" + id;
+            var checkbox1 = document.getElementById(option1);
+            var checkbox2 = document.getElementById(option2);
+            var checkbox3 = document.getElementById(option3);
+            var checkbox4 = document.getElementById(option4);
+            var option1 = 0;
+            var option2 = 0;
+            var option3 = 0;
+            var option4 = 0;
+            var check=false;
+            if (checkbox1.checked) {
+                option1 = 1;
+                check = true;
+            }
+            if (checkbox2.checked) {
+                option2 = 1;
+                check = true;
+            }
+            if (checkbox3 != null) {
+                if (checkbox3.checked) {
+                    option3 = 1;
+                    check = true;
+                }
+            }
+            if (checkbox4 != null) {
+                if (checkbox4.checked) {
+                    option4 = 1;
+                    check = true;
+                }
+         }
+         if (check == true) {
+             var data = JSON.stringify({
+                 poll_id: Poll_id,
+                 count1: option1,
+                 count2: option2,
+                 count3: option3,
+                 count4: option4
+             });
+             $.ajax({
+                 type: "POST",
+                 contentType: "application/json; charset=utf-8",
+                 url: "@(Url.Action("Add_Vote", "User_Dashboard"))",
+                 data: data,
+                 dataType: "json",
+                 success: function (data) {
+                     if (data == 1) {
+                         window.location = "/User_Dashboard/View_result/" + Poll_id;
+                         document.getElementById("cmttoast").innerHTML = "Vote Succefully";
+                         $('.toast').toast({ delay: 1000 });
+                         $(".toast").toast('show');
+
+                     }
+                     else if (data == 3) {
+                         window.location = "/User_Dashboard/View_result/" + Poll_id;
+                         document.getElementById("cmttoast").innerHTML = "you alredy Voted this Poll";
+                         $('.toast').toast({ delay: 1000 });
+                         $(".toast").toast('show');
+                     }
+
+                 }
+             })
+         }
+         else {
+             document.getElementById("cmttoast").innerHTML = "Please Select Option";
+             $('.toast').toast({ delay: 1000 });
+             $(".toast").toast('show');
+         }
+         </text>
+            }
+
+    }
+
+    function add_Profile() {
+
+        var tmppath = URL.createObjectURL(event.target.files[0]);
+
+        $("#ShowProfile").fadeIn("fast").attr('src', URL.createObjectURL(event.target.files[0]));
+        document.getElementById("profileaction").value = "New";
+    }
+
+    function cp_check() {
+        @if (Session["user_id"]== null) {
+            <text>window.location = "/Login/Login";</text>
+        }
+
+    }
+
+</script>

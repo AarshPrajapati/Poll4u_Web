@@ -1,0 +1,185 @@
+﻿
+@{
+    Layout = "~/Views/Shared/User_Layout.cshtml";
+}
+<div class="dropdown cateory">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+        Select Category
+    </button>
+    <ul class="dropdown-menu" id="Category">
+        <li><a class='dropdown-item' href="/User_Dashboard/Homepage">All</a></li>
+
+    </ul>
+</div>
+<div id="Userpoll">
+    @if (Model.Count == 0)
+    {
+        <p class="container text-center">Sorry But there is no Polls in This Category</p>
+    }
+
+    @foreach (var item in Model)
+    {
+
+        var vote = "Vote" + item.poll_id;
+        var view = "View" + item.poll_id;
+        var TotalCMT = "totalcmt" + item.poll_id;
+        var TotaladminCMT = "totalcmt" + item.Adminpoll_id;
+        var TotalLike = "totallike" + item.poll_id;
+        var BTNTotalLike = "btntotallike" + item.poll_id;
+        var option1 = "option1" + item.poll_id;
+        var option2 = "option2" + item.poll_id;
+        var option3 = "option3" + item.poll_id;
+        var option4 = "option4" + item.poll_id;
+
+        <h1></h1>
+        <div class="container" style="width:95%;">
+            
+            <div class="card" style="color:darkslategray;">
+
+                <div class="badge vote">@item.Total  votes</div>
+                    @if (TempData["cat"] != "System")
+                    {
+                    <div class="card-header">
+                        <a onclick="view_Profile(@item.user_id)" class="pp" @*href="/UserProfile/Profile/@item.user_id"*@><img src="@item.Profile" class="rounded-circle" alt="" />   @item.username</a>
+                        @*<b>@Html.ActionLink((string)item.Username, "GetUserDetail", "ManageUser", new { id = item2.user_id }, null)</b>*@
+                    </div>
+                    }
+                    <div class="card-body" onclick="Get_View_id('@item.poll_id')" style="padding-bottom:0px;">
+                        <span class="badge bg-primary" style="position:absolute;right:1%;">@item.category</span>
+                        <h5 class="card-title">@item.cp_Question</h5>
+                        <input type="hidden" value="@item.poll_id" id="pollid" />
+                        @*<small>Total Vote:- @item.Total</small><br />*@
+                        @if (item.Total == 0)
+                        {
+                            item.Total = 1;
+                        }
+                        <small style="color:gray;">Created on @item.cp_polldate.ToString("d")</small><br />
+                        @*@{ if (item.cp_enddate != "")
+                            {
+                                <small style="color:gray;">Expire on @item.cp_enddate</small>
+                            }
+                        }*@
+
+                    </div>
+                
+                <div class="option @item.poll_id" style="display:none;">
+
+                    <div class="card pt-2 border-0">
+                        <div class="card-header">
+                            <div class="form-check">
+                                <input class="form-check-input @item.poll_id" type="checkbox" name="option1" onclick="Checkbox(@item.poll_id,@item.cp_multipleoption)" id="@option1" value="@item.option1">
+                                <label class="form-check-label" for="@option1">
+                                    @item.option1
+                                </label>
+                            </div>
+                            @*<div class="progress">
+                        <div class="progress-bar" data-html="true" data-bs-toggle="tooltip" title=" vote: @item.count1 <br/> Average: @(item.count1 * 100 / item.Total)%" role="progressbar" style="width: @(item.count1 * 100 / item.Total)%"></div>
+                    </div>*@
+                        </div>
+
+                    </div>
+                    <div class="card pt-3 border-0">
+                        <div class="card-header">
+                            <div class="form-check">
+                                <input class="form-check-input @item.poll_id" type="checkbox" name="option2" onclick="Checkbox(@item.poll_id,@item.cp_multipleoption)" id="@option2" value="@item.option2">
+                                <label class="form-check-label" for="@option2">
+                                    @item.option2
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    @if (item.option3 != "")
+                    {
+                        <div class="card pt-3 border-0">
+                            <div class="card-header">
+                                <div class="form-check">
+                                    <input class="form-check-input @item.poll_id" type="checkbox" name="option3" onclick="Checkbox(@item.poll_id,@item.cp_multipleoption)" id="@option3" value="@item.option3">
+                                    <label class="form-check-label" for="@option3">
+                                        @item.option3
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (item.option4 != "")
+                    {
+                        <div class="card pt-3 pb-2 border-0">
+                            <div class="card-header">
+                                <div class="form-check">
+                                    <input class="form-check-input @item.poll_id" type="checkbox" name="option4" onclick="Checkbox(@item.poll_id,@item.cp_multipleoption)" id="@option4" value="@item.option4">
+                                    <label class="form-check-label" for="@option4">
+                                        @item.option4
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <br />
+                <div class="card-footer p-3 border-0">
+
+
+                    @*<div class="col-md-2"><div class="btn btn-success">@Html.ActionLink("Comment", "AdminPoll", "Poll", new { id = item.Adminpoll_id }, new { @class = "btncomment", onclick = "Show_comment('" + item.Adminpoll_id + "','" + xx + "')" })  <i class='far fa-comment'></i></div></div>*@
+                    @if (item.cp_comment == 1)
+                    {
+                        <span><button type="button"  @if (TempData["cat"] != "System") {<text> onclick="Show_comment('@item.poll_id', '@item.cp_Question')" id="@TotalCMT" </text>} else { <text> onclick="Show_Admincomment('@item.Adminpoll_id', '@item.cp_Question')"  id="@TotaladminCMT"</text>} value="Comment" class="bt btn btn-light" ><i class="bi bi-chat"></i>  @item.TotalCMT</button></span>
+                    }
+                    <span><button type="button" @if (TempData["cat"] != "System") {<text> onclick="Add_Like('@item.poll_id')" </text>} else { <text> onclick="Add_AdminLike('@item.Adminpoll_id')"</text>} value="@item.TotalLIKE" class="bt btn btn-light" id=@BTNTotalLike><i class="bi bi-hand-thumbs-up" id=@TotalLike></i>  @item.TotalLIKE</button></span>
+                    <span style="position:absolute; right:1%;">
+                        <input type="button" style="display:none;" name="Vote" class="bt btn btn-light border Vote" onclick="Submit_Vote('@item.poll_id')" id="@vote" value="Vote" />
+                        @if (item.user_id == ViewBag.user_id)
+                        {
+                            <button class="bt btn btn-light  dropdown-toggle" style="border: 1px solid gainsboro;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Edit
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/User_Dashboard/Edit_Poll/@item.poll_id">Modify</a></li>
+                                <li><a class="dropdown-item" onclick="delete_poll(@item.poll_id)">Delete</a></li>
+                                <li><a class="dropdown-item" onclick="close_poll(@item.poll_id)">Close</a></li>
+
+                            </ul>
+                        }
+                        <input type="button" name="View" class="bt btn btn-light border sh viewresult" id="@view" onclick="Get_View_id('@item.poll_id')" value="View Option" />
+                        @if (TempData["cat"] != "System")
+                        {
+                            <a href="/User_Dashboard/View_result/@item.poll_id"><input type="button" style="display:none;" class="bt btn border btn-light @item.poll_id" value="View Result" /></a>
+                        }
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+        <br />
+     
+       
+    }
+</div>
+<div class="card comment" id="Show_Comment" style="display:none;">
+
+    <div class="header pl-2" style="box-shadow:none;">
+        <p><h3>Comment<button class="close" type="button" id="cmtclose" onclick="Close_cmt()">×</button></h3></p>
+    </div>
+    <div class="card-header">
+        <h5><strong id="cmt"></strong></h5>
+    </div>
+
+    <div class="card-body">
+        <h5>Comments</h5><br />
+        <div id="usercomments" style="overflow:auto;font-size:14px;">
+
+        </div>
+        <input type="hidden" id="poll_id" />
+        <br />
+        <textarea name="comment" style="resize:none;" id="sendComment" class="form-control Comment-textarea" placeholder="Enter Comment Here"></textarea>
+        <button type="button" class="btn btn-light send_comment"  @if (TempData["cat"] != "System") {<text> onclick="Add_Comment()" </text>} else { <text> onclick="Add_AdminComment()"</text>}><i class="bi bi-send-fill"></i></button>
+    </div>
+    <div class="card-footer">
+
+    </div>
+</div>
+
+<script>
+   
+</script>

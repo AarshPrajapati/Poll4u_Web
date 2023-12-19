@@ -1,0 +1,79 @@
+﻿@model IEnumerable<Poll4u_Web_BOL.Category>
+@{
+    ViewBag.Title = "Get_Category";
+    ViewBag.PageName = "Category";
+    ViewBag.CategoryClass = "active";
+    ViewBag.Link = "Get_Category";
+    Layout = "~/Views/Shared/Admin_Layout.cshtml";
+
+}
+
+
+<form action="~/Poll/Add_Category" method="post">
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Add Category</h4>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="modal-input" name="Category" placeholder="Category Name" required />
+                </div>
+
+                <div class="modal-footer">
+                    <input type="submit" name="submit" id="modal-submit" class="btn btn-success" value="Submit" />
+                    <button type="button" class="btn btn-danger" id="modal-close" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<h4><a href="#" data-toggle="modal" data-target="#myModal">Add Category</a> </h4>
+
+<hr />
+<br />
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Total Category @Model.Count()</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="myTable">
+                <thead>
+                    <tr>
+                        <td> Category id </td>
+                        <td>Category Name</td>
+                        <td>Option</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @item.category_id
+                            </td>
+                            <td>
+                                @item.Name
+                            </td>
+                            <td>
+                                @Html.ActionLink("Remove", "Remove_Category", "Poll", new { id = item.category_id }, new { onclick = "return confirm('You Realy want to remove this User');" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+@if(TempData["Category"]!=null)
+            {
+                <script>alert('@TempData["Category"]');</script>
+            }

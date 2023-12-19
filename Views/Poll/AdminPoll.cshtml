@@ -1,0 +1,220 @@
+﻿@{
+    ViewBag.PageName = "Admin Polls";
+    ViewBag.Title = "AdminPoll";
+    ViewBag.AdminPollClass = "active";
+    Layout = "~/Views/Shared/Admin_Layout.cshtml";
+}
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+<h5 class="container-fluid" style="color:black">Total Poll @Model.Poll.Count</h5>
+<br />
+<div id="Adminpolls">
+    @foreach (var item in Model.Poll)
+    {
+        var xx = "comment" + item.Adminpoll_id;
+        var yy = "Like" + item.Adminpoll_id;
+        var Like = 0;
+        if (item.cp_enddate != "")
+        {
+            DateTime End_Date = Convert.ToDateTime(item.cp_enddate);
+            item.cp_enddate = End_Date.ToString("d");
+        }
+        foreach (var item3 in Model.Like)
+        {
+            if (item.Adminpoll_id == item3.Adminpoll_id)
+            {
+                Like = Like + 1;
+            }
+        }
+        <div class="container-fluid class">
+            <div class="card" style="color:darkslategray;">
+                <div class="card-body">
+                    <h5 class="card-title">@item.cp_Question</h5>
+                    <input type="hidden" value="@item.Adminpoll_id" id="id" />
+                    <small>Total Vote:- @item.Total</small><br />
+                    @if (item.Total == 0)
+                    {
+                        item.Total = 1;
+                    }
+                    <small style="color:gray;">Created on @item.cp_polldate.ToString("d")</small>
+                    @{ if (item.cp_enddate != "")
+                        {
+                            <small style="color:gray;">Expire on @item.cp_enddate</small>
+                        }
+                    }
+                </div>
+                <div class="@item.Adminpoll_id" style="display:none;">
+                    <div class="card pt-2 border-0">
+                        <div class="card-header">
+                            @item.option1
+                        </div>
+                        <div class="card-body">
+                            <div class="progress">
+                                <div class="progress-bar" data-html="true" data-bs-toggle="tooltip" title=" vote: @item.count1 <br/> Average: @(item.count1 * 100 / item.Total)%" role="progressbar" style="width: @(item.count1 * 100 / item.Total)%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card pt-3 border-0">
+                        <div class="card-header">
+                            @item.option2
+                        </div>
+                        <div class="card-body">
+                            <div class="progress">
+                                <div class="progress-bar" data-html="true" data-bs-toggle="tooltip" title=" vote: @item.count2 <br/> Average: @(item.count2 * 100 / item.Total)%" role="progressbar" style="width:  @(item.count2 * 100 / item.Total)%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    @if (item.option3 != "")
+                    {
+                        <div class="card pt-3 border-0">
+                            <div class="card-header">
+                                @item.option3
+                            </div>
+                            <div class="card-body">
+                                <div class="progress">
+                                    <div class="progress-bar" data-html="true" role="progressbar" data-bs-toggle="tooltip" title=" vote: @item.count3 <br/> Average: @(item.count3 * 100 / item.Total)%" style="width:  @(item.count3 * 100 / item.Total)%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (item.option4 != "")
+                    {
+                        <div class="card pt-3 pb-2 border-0">
+                            <div class="card-header">
+                                @item.option4
+                            </div>
+                            <div class="card-body">
+                                <div class="progress">
+                                    <div class="progress-bar" data-html="true" role="progressbar" data-bs-toggle="tooltip" title=" vote: @item.count4 <br/> Average: @(item.count4 * 100 / item.Total)%" style="width:  @(item.count4 * 100 / item.Total)%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="card-footer p-3 border-0">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <input type="button" name="View" class="btn btn-success viewresult" id="@item.Adminpoll_id" onclick="Get_View_id('@item.Adminpoll_id')" value="View Result" />
+
+                            <input type="button" style="display:none;" onclick="Get_Hide_id('@item.Adminpoll_id')" class="btn btn-success @item.Adminpoll_id" value="Hide Result" />
+                        </div>
+                        @*<div class="col-md-2"><div class="btn btn-success">@Html.ActionLink("Comment", "AdminPoll", "Poll", new { id = item.Adminpoll_id }, new { @class = "btncomment", onclick = "Show_comment('" + item.Adminpoll_id + "','" + xx + "')" })  <i class='far fa-comment'></i></div></div>*@
+                        <div class="col-md-2"><button type="button" onclick="Show_comment('@item.Adminpoll_id','@xx')" value="Comment" class="btn btn-success">Comment <i class='far fa-comment'></i></button></div>
+                        <div class="col-md-2"><button type="button" onclick="Show_Like('@item.Adminpoll_id','@yy')" value="Like" class="btn btn-success">@Like <i class="fa fa-heart"></i></button></div>
+                        <div class="col-md-6"> @Html.ActionLink("Delete", "AdminDeletePolls", "Poll", new { id = item.Adminpoll_id }, new { @class = "btn btn-danger float-right", onclick = "return confirm('You Realy want to Delete this Poll');" })</div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <br />
+    }
+</div>
+
+@foreach (var item in Model.Poll)
+{
+    var xx = "comment" + item.Adminpoll_id;
+    bool comment = false;
+    <div class="card comment" id="@xx" style="display:none;">
+
+        <div class="header pl-2">
+            <p><h3>Comment<button class="close" type="button" onclick="Hide_Comment('@item.Adminpoll_id','@xx')">×</button></h3></p>
+        </div>
+        <div class="card-header ">
+            <h5><strong class="bg-body">Question:-  @item.cp_Question</strong></h5>
+        </div>
+
+        <div class="card-body">
+            <h5>Comments</h5><br />
+            @foreach (var item2 in Model.Pollcomment)
+            {
+                if (item.Adminpoll_id == item2.Adminpoll_id)
+                {
+                    
+                    comment = true;
+                    <img class="rounded-circle" src="@item2.Profile" height="20px" width="30px" />
+                    <b>@Html.ActionLink((string)item2.username, "GetUserDetail", "ManageUser", new { id = item2.user_id }, null)</b>
+                    @item2.comment  <a class='delcmt' onclick='del_Admincomment(@item2.Admincomment_id )'>Delete</a> <hr />
+                }
+            }
+            @if (comment == false)
+            {
+                <b>No Commetns</b>
+            }
+        </div>
+    </div>
+}
+
+@foreach (var item4 in Model.Poll)
+{
+    var yy = "Like" + item4.Adminpoll_id;
+    bool like = false;
+    <div class="card Like" id="@yy" style="display:none;">
+
+        <div class="header pl-2">
+            <p><h3>Like<button class="close" type="button" onclick="Hide_Like('@item4.Adminpoll_id','@yy')">×</button></h3></p>
+        </div>
+        <div class="card-header ">
+            <h5><strong class="bg-body">Question:-  @item4.cp_Question</strong></h5>
+        </div>
+
+        <div class="card-body">
+            <h5>Likes</h5><br />
+            @foreach (var item3 in Model.Like)
+            {
+                if (item4.Adminpoll_id == item3.Adminpoll_id)
+                {
+                    like = true;
+                    <img class="rounded-circle" src="@item3.Profile" height="20px" width="30px" />
+                    <b>@Html.ActionLink((string)item3.username, "GetUserDetail", "ManageUser", new { id = item3.user_id }, null)</b>
+                    <hr />
+                }
+            }
+            @if (like==false)
+            {
+            <b>No Likes</b>
+            }
+        </div>
+    </div>
+}
+@*Js File*@
+<script src="~/Content/Admin_JS/Admin_JSFile.js"></script>
+<style>
+    .delcmt {
+        right: -1%;
+        position: relative;
+        color: red;
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    function del_Admincomment(id) {
+        var ID = id;
+
+      
+        let text = "You really want to delete this Comment";
+        if (confirm(text) == true) {
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: "@(Url.Action("Del_AdminComment", "User_Dashboard"))",
+                data: JSON.stringify({ id: ID }),
+                dataType: "json",
+                success: function (data) {
+                    if (data == 1) {
+                        document.getElementById("cmttoast").innerHTML = "Comment Deleted Succefully";
+                        $('.toast').toast({ delay: 1000 });
+                        $(".toast").toast('show');
+                    }
+                    else {
+                        document.getElementById("cmttoast").innerHTML = "Please Try Again";
+                        $('.toast').toast({ delay: 1000 });
+                        $(".toast").toast('show');
+                    }
+                    location.reload();
+                },
+            })
+        }
+    }
+</script>

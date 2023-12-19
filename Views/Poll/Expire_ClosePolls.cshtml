@@ -1,0 +1,62 @@
+﻿
+@{
+    ViewBag.Title = "Expire_ClosePolls";
+    ViewBag.PageName = "Polls";
+    ViewBag.PollClass = "active";
+    ViewBag.ExpirePollClass = "active";
+    ViewBag.Link = "AllPolls";
+    Layout = "~/Views/Shared/Admin_Layout.cshtml";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Total Polls @Model.Count</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div class="table">
+                <table id="myTable">
+                    <thead>
+                        <tr>
+                            <td>User id</td>
+                            <td> Poll id </td>
+                            <td> Category id </td>
+                            <td> Question </td>
+                            <td> Created Date</td>
+                            <td>Options</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @item.user_id
+                                </td>
+                                <td>
+                                    @item.poll_id
+                                </td>
+                                <td>
+                                    @item.category_id
+                                </td>
+                                <td>
+                                    @item.cp_Question
+                                </td>
+                                <td>
+                                    @item.cp_polldate
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Details", "PollDetail", "Poll", new { p_id = item.poll_id, u_id = item.user_id }, null) @*|*@
+                                    @*@Html.ActionLink("Remove", "RemovedPolls", "Poll", new { id = item.poll_id }, new { onclick = "return confirm('You Realy want to remove this Poll');" })*@
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+

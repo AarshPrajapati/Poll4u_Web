@@ -1,0 +1,136 @@
+﻿
+@{
+    ViewBag.Title = "Edit_Profile";
+    Layout = "~/Views/Shared/User_Layout.cshtml";
+}
+@foreach (var item in Model)
+{
+    <form action="~/UserProfile/Edit_Profile" method="post" enctype="multipart/form-data">
+        <input type="hidden" value="@item.user_id" name="user_id" />
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-3">
+                    <img src="@item.profile" id="ShowProfile" class="rounded" width="100px" />
+                </div>
+                <div class="col-md-6">
+                    <br />
+                    @item.Username
+                    <br />
+                    <label for="ProfileImage" class="btn btn-primary" style="color:white;" id="Profilepicture">Upload Image</label>
+                    <input type="file" id="ProfileImage" name="save_Profile" accept="image/png, image/gif, image/jpeg" onchange="add_Profile()" />
+                    <input type="hidden" id="profileaction" name="Profile_Action" />
+                    <a id="Profilepicture" class="btn btn-success" style="color:white;" onclick="remove_Profile()">Remove Image</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-3">
+                    <label class="form-check-label" for="FirstName">First Name</label>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" id="FirstName" class="form-control" value="@item.FirstName" name="FirstName" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-3">
+                    <label class="form-check-label" for="LastName">Last Name</label>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" id="LastName" class="form-control" value="@item.LastName" name="LastName" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-3">
+                    <label class="form-check-label" for="Username">Username</label>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" oninput="Check_EditUsername()" id="Username" class="form-control" value="@item.Username" name="Username" />
+                  
+                </div>
+                <div class="col-md-1">  <span id="UsrChceck" for="Username" class="Check_Editusername"></span></div>
+            </div>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-3">
+                    <label class="form-check-label" for="E-Mail">E-Mail</label>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" id="E-Mail" class="form-control" value="@item.E_Mail" name="E-Mail" disabled />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-3">
+
+                </div>
+                <div class="col-md-6">
+                    <input type="submit" id="subbtn" class="btn btn-primary sb" value="Update" />
+                </div>
+
+            </div>
+        </div>
+
+    </form>
+}
+<style>
+    .row {
+        margin-top: 20px;
+    }
+
+    .sb {
+        float: right;
+    }
+
+    .container {
+        width: 70%;
+    }
+
+    input[type=file] {
+        display: none;
+    }
+
+    #Profilepicture {
+        color: blue;
+        cursor: pointer;
+    }
+
+</style>
+
+<script>
+
+    function remove_Profile() {
+        document.getElementById("profileaction").value = "Remove";
+        $("#ShowProfile").attr('src', '/Content/Profile Photo/Blank Profile.png');
+    }
+
+
+    function Check_EditUsername() {
+        var username = document.getElementById("Username").value;
+        //alert(username);
+        $("#UsrChceck").html("Checking");
+        $.ajax({
+                 type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: "@(Url.Action("Edit_Username", "UserProfile"))",
+                data: JSON.stringify({ username: username }),
+                dataType: "json",
+                success: function (data) {
+                    if (data == 1) {
+                        $("#UsrChceck").html("<font color='red'>Please Choose <br/> Another Username</font>");
+                        $("#subbtn").prop('disabled', true);
+                    }
+                    else if (data == 2) {
+                        $("#UsrChceck").html("<font color='red'>Please Reload <br/> Page</font>");
+                        $("#subbtn").prop('disabled', true);
+                    }
+                    else {
+                        $("#UsrChceck").html("<font color='green'>Valid</font>");
+                        $("#subbtn").prop('disabled', false);
+                    }
+                }
+            })
+    }
+</script>

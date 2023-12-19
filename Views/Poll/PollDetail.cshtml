@@ -1,0 +1,267 @@
+﻿@using Poll4u_Web_BOL
+@model dynamic
+@{
+    ViewBag.Title = "PollDetail";
+    Layout = "~/Views/Shared/Admin_Layout.cshtml";
+    ViewBag.PageName = "Poll Detail";
+}
+<link href="~/Content/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
+<script src="~/Content/Admin_JS/Admin_JSFile.js"></script>
+<hr />
+<br />
+@{
+    bool comment = false;
+    bool like = false;
+}
+@foreach (var item in Model.Poll)
+{
+
+    if (item.cp_enddate != "")
+    {
+        DateTime End_Date = Convert.ToDateTime(item.cp_enddate);
+        item.cp_enddate = End_Date.ToString("d");
+    }
+    <section style="font-weight:500">
+
+        <h4>Total Vote @item.Total</h4>
+        <br />
+        @if (item.Total == 0)
+        {
+            item.Total = 1;
+        }
+        <div class="col-md-8">
+
+            <div class="container-fluid class pt-2">
+                <div class="card">
+
+                    <div class="card-header">
+                        @foreach (var item2 in Model.User)
+                        {
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <img src="@item2.profile" class="rounded-circle" height="30px" width="30px" alt="" />
+                                </div>
+                                <b>@Html.ActionLink((string)item2.Username, "GetUserDetail", "ManageUser", new { id = item2.user_id }, null)</b>
+                            </div>
+                        }
+                        <br />
+                        <small style="color:gray;">Creted On @item.cp_polldate.ToString("d")     </small>
+                        @{ if (item.cp_enddate != "")
+                            {
+                                <small style="color:gray;">Expire on @item.cp_enddate</small>
+                            }
+                        }
+                        <br />
+                        <h6 class="btn btn-success"> Education</h6>
+                    </div>
+                    <br />
+                    <div class="card-body">
+                        <div class="d-flex">
+
+                            <h5 class="card-title" style="font-weight:500">@item.cp_Question</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <br>
+
+        <div class="col-md-8">
+            <div class="container-fluid class pt-2">
+                <div class="card">
+                    <div class="card-header">
+                        @item.option1
+                    </div>
+                    <br>
+                    <div class="card-body">
+
+                        <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25"
+                             aria-valuemin="0" aria-valuemax="100">
+                            <div data-html="true" class="progress-bar" data-bs-toggle="tooltip" title=" vote: @item.count1 <br/> Average: @(item.count1*100/item.Total)%" style="width:@(item.count1*100/item.Total)%"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="container-fluid class pt-2">
+                <div class="card">
+                    <div class="card-header">
+                        @item.option2
+                    </div>
+                    <br>
+                    <div class="card-body">
+
+                        <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25"
+                             aria-valuemin="0" aria-valuemax="100">
+                            <div data-html="true" class="progress-bar" data-bs-toggle="tooltip" title=" vote: @item.count2 <br/> Average: @(item.count2*100/item.Total)%" style="width: @(item.count2*100/item.Total)%"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if (item.option3 != "")
+        {
+            <div class="col-md-8">
+                <div class="container-fluid class pt-2">
+                    <div class="card">
+                        <div class="card-header">
+                            @item.option3
+                        </div>
+                        <br>
+                        <div class="card-body">
+
+                            <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25"
+                                 aria-valuemin="0" aria-valuemax="100">
+                                <div data-html="true" class="progress-bar" data-bs-toggle="tooltip" title=" vote: @item.count3 <br/> Average: @(item.count3*100/item.Total)%" style="width:@(item.count3*100/item.Total)%"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (item.option4 != "")
+        {
+            <div class="col-md-8">
+                <div class="container-fluid class pt-2">
+                    <div class="card">
+                        <div class="card-header">
+                            @item.option4
+                        </div>
+                        <br>
+                        <div class="card-body">
+
+                            <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25"
+                                 aria-valuemin="0" aria-valuemax="100">
+                                <div data-html="true" class="progress-bar" data-bs-toggle="tooltip" title=" vote: @item.count4 <br/> Average: @(item.count4*100/item.Total)%" style="width: @(item.count4*100/item.Total)%"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <section>
+            <div class="container-fluid class pt-4 row">
+                <div class="ml-4">
+                    <span><button type="button" onclick="Show('@item.cp_Question','Show_Comment')" value="Comment" class="bt btn btn-light" id="1"><i class="bi bi-chat"></i> @item.TotalCMT</button></span>
+                </div>
+                <div class="ml-4">
+                    <span><button type="button" value="14" class="bt btn btn-light" onclick="Show('@item.cp_Question','Show_Like')"><i class="bi bi-hand-thumbs-up" id=14></i>  @item.TotalLIKE</button></span>
+                </div>
+                <div style="position:absolute;left:60%;">
+                    @Html.ActionLink("Remove Poll", "RemovedPolls", "Poll", new { id = item.poll_id }, new { @class = "btn btn-primary btn-sm", onclick = "return confirm('You Realy want to remove this Poll');" })
+                </div>
+
+            </div>
+        </section>
+    </section>
+    <br />
+    <br />
+}
+
+<div class="card comment" id="Show_Comment" style="display:none;">
+
+    <div class="header pl-2" style="box-shadow:none;">
+        <p>
+            <h3>
+                Comment
+                <button class="close" type="button" id="cmtclose" onclick="Close('Show_Comment')">×</button>
+            </h3>
+        </p>
+    </div>
+    <div class="card-header">
+        <h5>
+            <strong id="cmtq"></strong>
+        </h5>
+    </div>
+
+    <div class="card-body">
+        <h5>Comments</h5>
+        <br />
+        <div id="usercomments" style="overflow:auto;font-size:14px;">
+            @foreach (var item3 in Model.Comment)
+            {
+                comment = true;
+                <img class="rounded-circle" src="@item3.Profile" height="20px" width="30px" />
+                <b>@Html.ActionLink((string)item3.username, "GetUserDetail", "ManageUser", new { id = item3.user_id }, null)</b>
+                @item3.comment
+                <hr />
+            }
+
+            @if (comment == false)
+            {
+                <b>No Commetns</b>
+            }
+        </div>
+
+        <br />
+    </div>
+    <div class="card-footer">
+
+    </div>
+</div>
+
+<div class="card Like" id="Show_Like" style="display:none;">
+
+    <div class="header pl-2">
+        <p>
+            <h3>
+                Like
+                <button class="close" type="button" onclick="Close('Show_Like')">×</button>
+            </h3>
+        </p>
+    </div>
+    <div class="card-header ">
+        <h5>
+            <strong id="cmtq"></strong>
+        </h5>
+    </div>
+
+    <div class="card-body">
+        <h5>Likes</h5>
+        <br />
+        @foreach (var item4 in Model.Like)
+        {
+
+            like = true;
+            <img class="rounded-circle" src="@item4.Profile" height="20px" width="30px" />
+            <b>@Html.ActionLink((string)item4.username, "GetUserDetail", "ManageUser", new { id = item4.user_id }, null)</b>
+            <hr />
+
+        }
+        @if (like == false)
+        {
+            <b>No Likes</b>
+        }
+    </div>
+</div>
+
+ <script>
+// Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+})
+</script>
+
+
+<style>
+    .bt:hover {
+        color: white;
+        background-color: #2e59d9;
+    }
+</style>
+@*<script>
+    function Show(Que, id) {
+        var Question = Que;
+        var show_id = id;
+        document.getElementById("cmtq").innerHTML = "Question :- " + Question;
+        $("#" + show_id).show();
+    }
+</script>*@
