@@ -1,4 +1,4 @@
-<h1>Poll4u_web is a Poll Website , Where Users can crate the poll of their quation and get the answer or opinion on that poll from other users or from their friends.</br>
+<h3>Poll4u_web is a Poll Website , Where Users can crate the poll of their quation and get the answer or opinion on that poll from other users or from their friends.</br>
 <table width=100%>
   <tr><th colspan=2>Techonology Used </th></th>
   <tr>
@@ -15,4 +15,4 @@
   </tr>
 
 </table></br>
-Add Poll4u_web_backend file in this project as a reference </h1>
+Add Poll4u_web_backend file in this project as a reference </h3>
